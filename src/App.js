@@ -1,11 +1,15 @@
-import React from 'react';
+import React from "react";
+import { HelmetProvider } from "react-helmet-async";
+import Router from "./Router";
 
 const App = () => {
   return (
-    <div className="App">
-      <h1>Dreambinar Starter App</h1>
-    </div>
+    <>
+      <HelmetProvider>
+        <Router />
+      </HelmetProvider>
+    </>
   );
-}
+};
 
 export default App;
