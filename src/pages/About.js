@@ -1,13 +1,14 @@
-import React from 'react'
-import Title from '../components/Title'
+import React from "react";
+import Head from "../components/Head";
 
 const About = () => {
   return (
     <>
-      <Title set="About" />
-      <h1>About</h1>
-    </>
-  )
-}
+      <Head title="About" />
 
-export default About
+      <h1>Abou</h1>
+    </>
+  );
+};
+
+export default About;

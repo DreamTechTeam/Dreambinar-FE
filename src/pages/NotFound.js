@@ -1,13 +1,14 @@
-import React from 'react'
-import Title from '../components/Title'
+import React from "react";
+import Head from "../components/Head";
 
 const NotFound = () => {
   return (
     <>
-      <Title set="404 Not Found" />
+      <Head title="Not Found" />
+
       <h1>404 Not Found</h1>
     </>
-  )
-}
+  );
+};
 
-export default NotFound
+export default NotFound;

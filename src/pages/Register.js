@@ -1,13 +1,14 @@
-import React from 'react'
-import Title from '../components/Title'
+import React from "react";
+import Head from "../components/Head";
 
 const Register = () => {
   return (
     <>
-      <Title set="Register" />
+      <Head title="Register" />
+
       <h1>Register</h1>
     </>
-  )
-}
+  );
+};
 
-export default Register
+export default Register;

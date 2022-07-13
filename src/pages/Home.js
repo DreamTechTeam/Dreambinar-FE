@@ -1,13 +1,14 @@
-import React from 'react'
-import Title from '../components/Title'
+import React from "react";
+import Head from "../components/Head";
 
 const Home = () => {
   return (
     <>
-      <Title set="Home" />
+      <Head title="Home" />
+
       <h1>Home</h1>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
