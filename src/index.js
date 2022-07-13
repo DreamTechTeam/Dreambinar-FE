@@ -1,11 +1,15 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import './index.css';
-import { BrowserRouter } from 'react-router-dom';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import { BrowserRouter } from "react-router-dom";
 
-const root = createRoot(document.getElementById('root'));
+// styles
+import "./index.css";
+import "@fontsource/inter";
+import "@fontsource/source-sans-3";
+
+const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
