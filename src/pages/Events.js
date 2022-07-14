@@ -1,10 +1,15 @@
 import React from "react";
 import Head from "../components/Head";
+import NavBar from "../components/NavBar";
 
 const Events = () => {
   return (
     <>
       <Head title="Events" />
+
+      <header>
+        <NavBar />
+      </header>
 
       <article className="prose xl:prose-xl">
         <h1>Events</h1>
