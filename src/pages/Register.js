@@ -6,7 +6,9 @@ const Register = () => {
     <>
       <Head title="Register" />
 
-      <h1>Register</h1>
+      <article className="prose xl:prose-xl">
+        <h1>Register</h1>
+      </article>
     </>
   );
 };

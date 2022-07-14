@@ -6,7 +6,9 @@ const Login = () => {
     <>
       <Head title="Login" />
 
-      <h1>Login</h1>
+      <article className="prose xl:prose-xl">
+        <h1>Login</h1>
+      </article>
     </>
   );
 };

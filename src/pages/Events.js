@@ -6,7 +6,9 @@ const Events = () => {
     <>
       <Head title="Events" />
 
-      <h1>Events</h1>
+      <article className="prose xl:prose-xl">
+        <h1>Events</h1>
+      </article>
     </>
   );
 };
