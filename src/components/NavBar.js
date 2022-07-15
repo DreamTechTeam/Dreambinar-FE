@@ -8,7 +8,7 @@ const NavBar = () => {
   const menuRef = useRef();
 
   const navbarLinks = [
-    { to: "/home", title: "Home" },
+    { to: "/", title: "Home" },
     { to: "/events", title: "Events" },
     { to: "/about", title: "About Us" },
   ];
@@ -34,7 +34,7 @@ const NavBar = () => {
           <NavbarToggle menuRef={menuRef} />
         </div>
         <div
-          className="hidden justify-between items-center w-full"
+          className="hidden justify-between items-center w-full md:hidden"
           ref={menuRef}
         >
           <NavbarLinkList data={navbarLinks} />
