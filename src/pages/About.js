@@ -11,7 +11,7 @@ const About = () => {
         <NavBar />
       </header>
 
-      <article className="prose xl:prose-xl">
+      <article>
         <h1>About</h1>
       </article>
     </>

@@ -11,7 +11,7 @@ const Events = () => {
         <NavBar />
       </header>
 
-      <article className="prose xl:prose-xl">
+      <article>
         <h1>Events</h1>
       </article>
     </>

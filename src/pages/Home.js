@@ -11,7 +11,7 @@ const Home = () => {
         <NavBar />
       </header>
 
-      <article className="prose xl:prose-xl">
+      <article>
         <h1>Home</h1>
       </article>
     </>

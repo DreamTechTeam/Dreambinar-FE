@@ -6,7 +6,7 @@ const NotFound = () => {
     <>
       <Head title="Not Found" />
 
-      <article className="prose xl:prose-xl">
+      <article>
         <h1>404 Not Found</h1>
       </article>
     </>
