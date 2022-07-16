@@ -11,9 +11,6 @@ import "@fontsource/inter";
 import "@fontsource/source-sans-3";
 import "react-toastify/dist/ReactToastify.css";
 
-// configs
-import "./configs/env";
-
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
