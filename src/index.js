@@ -3,17 +3,24 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { BrowserRouter } from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
 
 // styles
 import "./index.css";
 import "@fontsource/inter";
 import "@fontsource/source-sans-3";
+import "react-toastify/dist/ReactToastify.css";
+
+// configs
+import "./configs/env";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <CookiesProvider>
+        <App />
+      </CookiesProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

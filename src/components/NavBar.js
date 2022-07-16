@@ -18,12 +18,12 @@ const NavBar = () => {
       <div className="container flex flex-wrap justify-between items-center mx-auto">
         <Link to="/" className="flex items-center">
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="mr-3 h-6 sm:h-9"
+            src="https://res.cloudinary.com/dreamtechteam/image/upload/v1657935772/dreambinar-logo_xrye3d.png"
+            className="mr-3 h-6 sm:h-9 rounded-md"
             alt="Flowbite Logo"
           />
           <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-            Dreambinar
+            Dream<span className="text-green-800 dark:text-white">binar</span>
           </span>
         </Link>
         <div className="flex">

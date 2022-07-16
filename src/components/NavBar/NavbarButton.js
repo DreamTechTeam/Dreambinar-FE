@@ -6,7 +6,7 @@ const NavbarButton = ({ title, variant }) => {
   `;
 
   const className =
-    variant === "primary" ? modifyColor("blue") : modifyColor("red");
+    variant === "primary" ? modifyColor("green") : modifyColor("red");
 
   return (
     <Link to="/login" className={className}>
