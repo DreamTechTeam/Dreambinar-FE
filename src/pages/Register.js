@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "../components/Head";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import strapi from "../api/strapi";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import setExpires from "../utils/setExpires";
 
@@ -15,8 +15,18 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies();
+  const isLoggedIn = localStorage.getItem("isLoggedIn") || false;
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      window.location.href = "/login";
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -62,6 +72,8 @@ const Login = () => {
           progress: undefined,
         });
 
+        localStorage.setItem("isLoggedIn", true);
+
         toast.success("Login Successfully!", {
           position: "top-right",
           autoClose: 5000,
@@ -72,6 +84,8 @@ const Login = () => {
           draggable: false,
           progress: undefined,
         });
+
+        navigate("/");
       }
     } catch (error) {
       if (error) {
@@ -93,7 +107,6 @@ const Login = () => {
     <>
       <Head title="Register" />
 
-      <ToastContainer />
       <div className="grid grid-cols-1 grid-rows-1 h-screen md:grid-cols-2">
         <div className="py-6 px-6 md:py-0 md:px-10 lg:px-20 xl:px-40 my-auto">
           <div className="flex flex-col box-border">

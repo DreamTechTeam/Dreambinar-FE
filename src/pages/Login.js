@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "../components/Head";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import strapi from "../api/strapi";
@@ -17,8 +17,17 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies();
+  const isLoggedIn = localStorage.getItem("isLoggedIn")
+    ? JSON.parse(localStorage.getItem("isLoggedIn"))
+    : false;
+  const navigate = useNavigate();
 
-  console.log(cookies);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn, navigate]);
+
   const onSubmit = async (data) => {
     setLoading(true);
 
@@ -33,6 +42,7 @@ const Login = () => {
           path: "/",
           expires: setExpires(),
         });
+
         setCookie("user", response.data.user, {
           path: "/",
           expires: setExpires(),
@@ -52,6 +62,8 @@ const Login = () => {
           removeCookie("rememberLogin", { path: "/" });
         }
 
+        localStorage.setItem("isLoggedIn", true);
+
         toast.success("Login Successfully!", {
           position: "top-right",
           autoClose: 5000,
@@ -61,8 +73,12 @@ const Login = () => {
           draggable: false,
           progress: undefined,
         });
+
+        setLoading(false);
+        navigate("/");
       }
     } catch (error) {
+      setLoading(false);
       if (error.response.status === 400) {
         toast.warn(`${error.response.data.error.message}`, {
           position: "top-right",
@@ -76,7 +92,6 @@ const Login = () => {
         return true;
       }
     }
-    setLoading(false);
   };
 
   return (
