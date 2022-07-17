@@ -106,7 +106,7 @@ const Login = () => {
               <div className="mb-2 flex justify-center">
                 <Avatar img="https://res.cloudinary.com/dreamtechteam/image/upload/v1657935772/dreambinar-logo_xrye3d.png" />
               </div>
-              <h1 className="font-[Inter] text-2xl font-bold text-center mb-2">
+              <h1 className="font-sans text-2xl font-black text-center mb-2">
                 Sign in to your account
               </h1>
               <p className="text-center text-slate-400">
@@ -212,7 +212,7 @@ const Login = () => {
                 />
               </svg>{" "}
               <p className="ml-2">
-                <Link to="/" className="font-bold">
+                <Link to="/" className="font-bold font-sans">
                   Back To Home
                 </Link>
               </p>
@@ -222,7 +222,7 @@ const Login = () => {
 
         <div className="hidden md:block bg-[url('https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTIyfHxuYXR1cmV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=80')] bg-cover">
           <div className="py-6 px-6 md:py-0 md:px-10 lg:px-20 xl:px-40 flex justify-center items-center flex-col text-white backdrop-brightness-50 backdrop-blur-sm h-screen">
-            <h1 className="font-bold text-3xl font-[Inter] text-center">
+            <h1 className="font-black text-3xl font-sans text-center mb-2">
               I love you in every universe
             </h1>
             <p>Dr. Stephen Strange</p>
