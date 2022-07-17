@@ -1,8 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Head from "../components/Head";
 
 const NotFound = () => {
+  const navigate = useNavigate();
+
+  const navigateHome = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <Head title="Not Found" />
@@ -38,8 +44,11 @@ const NotFound = () => {
               Sorry about that! Please visit our hompage to get where you need
               to go.
             </p>
-            <button className="w-full lg:w-auto my-4 border rounded-md px-1 sm:px-16 py-5 bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50">
-              <Link to="/">Go to Homepage</Link>
+            <button
+              onClick={navigateHome}
+              className="w-full lg:w-auto my-4 border rounded-md px-1 sm:px-16 py-5 bg-green-600 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
+            >
+              Go to Homepage
             </button>
           </div>
         </div>
