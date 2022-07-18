@@ -12,14 +12,17 @@ import {
   Accordion,
 } from "flowbite-react";
 import { useForm } from "react-hook-form";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import FooTer from "../components/FooTer";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const About = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   const fetchDeveloperList = async () => {
@@ -36,6 +39,41 @@ const About = () => {
     retry: 10,
   });
 
+  const fetchFeedback = async (data) => {
+    try {
+      const response = await axios.post("http://localhost:3001/feedback", {
+        fullName: data.fullName,
+        email: data.email,
+        message: data.message,
+        createdAt: new Date().toISOString(),
+      });
+
+      if (response.status === 201) {
+        toast.success(`Thanks for sending Feedback ${data.fullName}!`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: false,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      toast.warn(`Feedback failed to send, unable to send Feedback right now`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: false,
+        progress: undefined,
+      });
+    }
+  };
+
+  const feedbackQueries = useMutation(["feedback"], fetchFeedback);
+
   if (developerQuery.isError) {
     return (
       <div className="h-screen flex justify-center items-center">
@@ -46,8 +84,14 @@ const About = () => {
     );
   }
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    await feedbackQueries.mutateAsync(data);
+
+    reset({
+      fullName: "",
+      email: "",
+      message: "",
+    });
   };
 
   return (
@@ -58,8 +102,8 @@ const About = () => {
         <NavBar />
       </header>
 
-      <article className="container mx-auto px-4 mt-8 md:px-8 lg:px-12 xl:mt-12 xl:px-16">
-        <div className="mx-auto lg:items-center lg:flex">
+      <div className="container mx-auto px-4 mt-8 md:px-8 lg:px-12 xl:mt-12 xl:px-16">
+        <section className="mx-auto lg:items-center lg:flex">
           <div className="max-w-xl mx-auto text-center">
             <h1 className="text-3xl font-black font-sans sm:text-5xl flex flex-col justify-center items-center">
               Know More
@@ -74,20 +118,7 @@ const About = () => {
               wider community and need it supported by the latest technology.
             </p>
           </div>
-        </div>
-        {/* <div className=" rounded-md flex justify-center items-center lg:rounded-lg">
-          <div className="p-8 md:p-16 lg:px-60 xl:px-80">
-            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2 text-gray-800">
-              Know About Dreamtech
-            </h1>
-            <p className="text-center font-light text-gray-800">
-              Dreamtech was formed by people who have the same vision and
-              mission and are a form of our dedication as IT enthusiasts. We
-              want to create a technology with innovation that can benefit the
-              wider community and need it supported by the latest technology.
-            </p>
-          </div>
-        </div> */}
+        </section>
 
         <div className="mt-8 md:mt-12 lg:mt-16">
           <div className="mb-4 md:mb-8">
@@ -166,20 +197,37 @@ const About = () => {
                     <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs">
                       ADDRESS
                     </h2>
-                    <p className="mt-1">
+                    <a
+                      href="https://g.page/ummi_sukabumi?share"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      className="mt-1 hover:text-blue-700"
+                    >
                       Jl. R. Syamsudin, S.H. No. 50, Cikole, Kec. Cikole, Kota
                       Sukabumi, Jawa Barat 43113
-                    </p>
+                    </a>
                   </div>
                   <div className="lg:w-1/2 px-6 mt-4 lg:mt-0">
                     <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs">
                       EMAIL
                     </h2>
-                    <p className="leading-relaxed">admin@dreamtechteam.me</p>
+                    <a
+                      href="mailto:admin@dreamtechteam.me"
+                      className="leading-relaxed hover:text-blue-700"
+                    >
+                      admin@dreamtechteam.me
+                    </a>
                     <h2 className="title-font font-semibold text-gray-900 tracking-widest text-xs mt-2">
                       WHATSAPP
                     </h2>
-                    <p className="leading-relaxed">+62 812 3456 7890</p>
+                    <a
+                      href="https://wa.me/+6281234567890"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      className="leading-relaxed hover:text-blue-700"
+                    >
+                      +62 812 3456 7890
+                    </a>
                   </div>
                 </div>
               </div>
@@ -187,29 +235,27 @@ const About = () => {
                 <h2 className="text-gray-900 text-lg mb-1 font-bold font-sans title-font">
                   Feedback
                 </h2>
-                <p className="leading-relaxed mb-3 text-gray-600">
-                  lorem ipsum dolor sit amet consectetur adipisicing elit.
-                </p>
+                <p className="leading-relaxed mb-3 text-gray-600"></p>
 
                 <form
                   className="flex flex-col gap-2"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  {/* {loading && (
+                  {feedbackQueries.isLoading && (
                     <div className="absolute inset-0 z-10 bg-white/20" />
-                  )} */}
+                  )}
                   <div>
                     <div className="mb-2 block">
-                      <Label htmlFor="fullname" value="Full Name*" />
+                      <Label htmlFor="fullName" value="Full Name*" />
                     </div>
                     <TextInput
-                      color={errors.fullname && "failure"}
-                      id="fullname"
+                      color={errors.fullName && "failure"}
+                      id="fullName"
                       type="text"
-                      // disabled={loading}
-                      {...register("fullname", { required: true })}
+                      disabled={feedbackQueries.isLoading}
+                      {...register("fullName", { required: true })}
                     />
-                    {errors.fullname && (
+                    {errors.fullName && (
                       <p className="text-red-700 text-sm pt-1">
                         * This field is required
                       </p>
@@ -223,7 +269,7 @@ const About = () => {
                       color={errors.email && "failure"}
                       id="email"
                       type="email"
-                      // disabled={loading}
+                      disabled={feedbackQueries.isLoading}
                       {...register("email", { required: true })}
                     />
                     {errors.email && (
@@ -240,7 +286,7 @@ const About = () => {
                       id="message"
                       color={errors.message && "failure"}
                       rows={4}
-                      // disabled={loading}
+                      disabled={feedbackQueries.isLoading}
                       {...register("message", { required: true })}
                     />
                     {errors.message && (
@@ -256,16 +302,16 @@ const About = () => {
                       width: "auto",
                       marginTop: ".5rem",
                     }}
-                    // disabled={loading}
+                    disabled={feedbackQueries.isLoading}
                     color="success"
                   >
-                    {/* {loading ? (
+                    {feedbackQueries.isLoading ? (
                       <div className="mr-3">
                         <Spinner size="sm" light={true} /> Loading...
                       </div>
-                    ) : ( */}
-                    Submit
-                    {/* )} */}
+                    ) : (
+                      "Submit"
+                    )}
                   </Button>
                 </form>
               </div>
@@ -372,7 +418,7 @@ const About = () => {
             </Accordion.Panel>
           </Accordion>
         </div>
-      </article>
+      </div>
 
       <footer>
         <FooTer />
