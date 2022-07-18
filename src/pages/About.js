@@ -13,6 +13,7 @@ import {
 } from "flowbite-react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
+import FooTer from "../components/FooTer";
 
 const About = () => {
   const {
@@ -356,6 +357,10 @@ const About = () => {
           </Accordion>
         </div>
       </article>
+
+      <footer>
+        <FooTer />
+      </footer>
     </>
   );
 };

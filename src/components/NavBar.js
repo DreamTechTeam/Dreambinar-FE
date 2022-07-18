@@ -42,7 +42,7 @@ const NavBar = () => {
             className="mr-3 h-6 sm:h-9 rounded-md"
             alt="Flowbite Logo"
           />
-          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+          <span className="self-center text-gray-800 text-xl font-black font-sans whitespace-nowrap dark:text-white">
             Dream
             <span className="text-green-800 dark:text-white">binar</span>
           </span>
