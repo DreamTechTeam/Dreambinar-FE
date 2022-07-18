@@ -1,7 +1,11 @@
 import React from "react";
 
 const HomeFeaturesItem = ({ feature }) => {
-  const featureImage = feature.featureImage.data.attributes.url;
+  const featureImage =
+    feature.featureImage.data.attributes.url &&
+    feature.featureImage.data.attributes.url !== ""
+      ? feature.featureImage.data.attributes.url
+      : "https://via.placeholder.com/150";
 
   return (
     <div className="w-full md:w-1/2 lg:w-1/4 px-4">

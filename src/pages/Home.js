@@ -9,10 +9,28 @@ import { Button, Spinner } from "flowbite-react";
 import FooTer from "../components/FooTer";
 import HomeOrmawaList from "../components/Home/HomeOrmawaList";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import axios from "axios";
 
 const Home = () => {
+  const [populate, setPopulate] = useState(0);
   const [isShowedMoreOrmawa, setIsShowedMoreOrmawa] = useState(false);
+
+  const populateMore = () => {
+    if (populate > 1) {
+      setIsShowedMoreOrmawa(true);
+      setPopulate(1);
+    }
+    setIsShowedMoreOrmawa(true);
+    setPopulate(populate + 1);
+  };
+
+  const populateLess = () => {
+    if (populate < 0) {
+      setIsShowedMoreOrmawa(false);
+      setPopulate(0);
+    }
+    setIsShowedMoreOrmawa(false);
+    setPopulate(populate - 1);
+  };
 
   const fetchFeaturesList = async () => {
     try {
@@ -25,7 +43,7 @@ const Home = () => {
 
   const fetchOrmawaList = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/ormawa");
+      const response = await strapi.get("/ormawas?populate=*");
       return response.data;
     } catch (error) {
       throw new Error(error);
@@ -37,7 +55,7 @@ const Home = () => {
     retry: 10,
   });
 
-  const ormawaQuery = useQuery(["ormawa"], fetchOrmawaList, {
+  const ormawaQuery = useQuery(["ormawa", populate], fetchOrmawaList, {
     retry: 10,
   });
 
@@ -261,12 +279,16 @@ const Home = () => {
                 isShowedMore={isShowedMoreOrmawa}
                 onlyShow={12}
               />
-              {ormawaQuery.data.length > 12 && (
+              {ormawaQuery.data.data.length > 12 && (
                 <div className="flex mt-6 md:mt-8">
                   <div className="mx-auto">
                     <Button
                       color={"light"}
-                      onClick={() => setIsShowedMoreOrmawa(!isShowedMoreOrmawa)}
+                      onClick={
+                        !isShowedMoreOrmawa
+                          ? () => populateMore()
+                          : () => populateLess()
+                      }
                     >
                       <div className="flex flex-col justify-center items-center px-4">
                         {isShowedMoreOrmawa ? "Show Less" : "Show More"}
