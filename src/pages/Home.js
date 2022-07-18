@@ -9,6 +9,7 @@ import { Button, Spinner } from "flowbite-react";
 import FooTer from "../components/FooTer";
 import HomeOrmawaList from "../components/Home/HomeOrmawaList";
 import { FaAngleDown } from "react-icons/fa";
+import axios from "axios";
 
 const Home = () => {
   const fetchFeaturesList = async () => {
@@ -22,9 +23,7 @@ const Home = () => {
 
   const fetchOrmawaList = async () => {
     try {
-      const response = await strapi.get(
-        "https://623b066b2e056d1037ebba0e.mockapi.io//ormawa"
-      );
+      const response = await axios.get("http://localhost:3001/ormawa");
       return response.data;
     } catch (error) {
       console.log(error);
@@ -35,6 +34,7 @@ const Home = () => {
   const featuresQuery = useQuery(["features"], fetchFeaturesList, {
     retry: 10,
   });
+
   const ormawaQuery = useQuery(["ormawa"], fetchOrmawaList, {
     retry: 10,
   });
