@@ -1,0 +1,73 @@
+{
+  "feedback": [
+    {
+      "fullName": "Deri Kurniawan",
+      "email": "deri.netuchi@gmail.com",
+      "message": "Tambahkan Error Handler Pada Login",
+      "createdAt": "2022-07-18T07:59:56.910Z",
+      "id": 1
+    }
+  ],
+  "ormawa": [
+    {
+      "name": "postCSS",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129611/Ormawa%20Test/postcss_ws4d5f.svg",
+      "id": "1"
+    },
+    {
+      "name": "typeForm",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129609/Ormawa%20Test/typeform_ozxexe.svg",
+      "id": "2"
+    },
+    {
+      "name": "vsCode",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129610/Ormawa%20Test/visual-studio-code_j65tgf.svg",
+      "id": "3"
+    },
+    {
+      "name": "todoIs",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129609/Ormawa%20Test/todoist_oqymrf.svg",
+      "id": "4"
+    },
+    {
+      "name": "slack",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129609/Ormawa%20Test/slack-icon_xoq3uy.svg",
+      "id": "5"
+    },
+    {
+      "name": "discord",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129610/Ormawa%20Test/discord_nu0jyv.svg",
+      "id": "6"
+    },
+    {
+      "name": "google",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/google_uuhgvz.svg",
+      "id": "7"
+    },
+    {
+      "name": "apple",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/apple_jv21d3.svg",
+      "id": "8"
+    },
+    {
+      "name": "tailwind",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/tailwindcss_c2fzd2.svg",
+      "id": "9"
+    },
+    {
+      "name": "yahoo",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/yahoo_m2rv0x.svg",
+      "id": "10"
+    },
+    {
+      "name": "android",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/android_haumaj.svg",
+      "id": "11"
+    },
+    {
+      "name": "algolia",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/algolia_qt870s.svg",
+      "id": "12"
+    }
+  ]
+}
