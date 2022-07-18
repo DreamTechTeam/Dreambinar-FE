@@ -20,9 +20,11 @@ const AboutItem = ({ developer }) => {
     },
   ];
 
-  const developerSocial = developer.socialMedia
-    ? developer.socialMedia
-    : socialList;
+  const developerSocial =
+    developer.socialMedia && developer.socialMedia.length > 0
+      ? developer.socialMedia
+      : socialList;
+
   const developerImage = developer.profileImg.data.attributes.url;
 
   return (
