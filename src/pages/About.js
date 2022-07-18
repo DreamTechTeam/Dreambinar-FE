@@ -59,7 +59,23 @@ const About = () => {
       </header>
 
       <article className="container mx-auto px-4 mt-8 md:px-8 lg:px-12 xl:mt-12 xl:px-16">
-        <div className=" rounded-md flex justify-center items-center lg:rounded-lg">
+        <div className="mx-auto lg:items-center lg:flex">
+          <div className="max-w-xl mx-auto text-center">
+            <h1 className="text-3xl font-black font-sans sm:text-5xl flex flex-col justify-center items-center">
+              Know More
+              <strong className="font-extrabold text-green-700 block">
+                About Dreamtech.
+              </strong>
+            </h1>
+            <p className="mt-4 sm:leading-relaxed sm:text-lg">
+              Dreamtech was formed by people who have the same vision and
+              mission and are a form of our dedication as IT enthusiasts. We
+              want to create a technology with innovation that can benefit the
+              wider community and need it supported by the latest technology.
+            </p>
+          </div>
+        </div>
+        {/* <div className=" rounded-md flex justify-center items-center lg:rounded-lg">
           <div className="p-8 md:p-16 lg:px-60 xl:px-80">
             <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2 text-gray-800">
               Know About Dreamtech
@@ -71,14 +87,14 @@ const About = () => {
               wider community and need it supported by the latest technology.
             </p>
           </div>
-        </div>
+        </div> */}
 
         <div className="mt-8 md:mt-12 lg:mt-16">
           <div className="mb-4 md:mb-8">
-            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2 text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2">
               Meet Our Team
             </h1>
-            <p className="text-center font-light text-gray-700">
+            <p className="text-center text-base md:text-lg font-light">
               lorem ipsum dolor sit amet consectetur adipisicing elit.
             </p>
           </div>
@@ -120,10 +136,10 @@ const About = () => {
 
         <div className="mt-8 md:mt-12 lg:mt-16">
           <div className="mb-4 md:mb-8">
-            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2 text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2">
               Let's Stay Connected
             </h1>
-            <p className="text-center font-light text-gray-700">
+            <p className="text-center text-base md:text-lg font-light ">
               lorem ipsum dolor sit amet consectetur adipisicing elit.
             </p>
           </div>
@@ -260,10 +276,10 @@ const About = () => {
 
         <div className="mt-8 md:mt-12 lg:mt-16 mb-8 md:mb-12 lg:mb-16">
           <div className="mb-4 md:mb-8">
-            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2 text-gray-800">
+            <h1 className="text-2xl md:text-3xl font-black font-sans text-center mb-2">
               Frequently asked questions
             </h1>
-            <p className="text-center font-light text-gray-700">
+            <p className="text-center text-base md:text-lg font-light">
               lorem ipsum dolor sit amet consectetur adipisicing elit.
             </p>
           </div>
