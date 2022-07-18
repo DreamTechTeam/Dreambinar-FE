@@ -68,6 +68,36 @@
       "name": "algolia",
       "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129608/Ormawa%20Test/algolia_qt870s.svg",
       "id": "12"
+    },
+    {
+      "name": "postCSS",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129611/Ormawa%20Test/postcss_ws4d5f.svg",
+      "id": "13"
+    },
+    {
+      "name": "typeForm",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129609/Ormawa%20Test/typeform_ozxexe.svg",
+      "id": "14"
+    },
+    {
+      "name": "vsCode",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129610/Ormawa%20Test/visual-studio-code_j65tgf.svg",
+      "id": "15"
+    },
+    {
+      "name": "todoIs",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129609/Ormawa%20Test/todoist_oqymrf.svg",
+      "id": "16"
+    },
+    {
+      "name": "slack",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129609/Ormawa%20Test/slack-icon_xoq3uy.svg",
+      "id": "17"
+    },
+    {
+      "name": "discord",
+      "imageUrl": "https://res.cloudinary.com/dreamtechteam/image/upload/v1658129610/Ormawa%20Test/discord_nu0jyv.svg",
+      "id": "18"
     }
   ]
 }

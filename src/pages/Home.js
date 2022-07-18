@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Head from "../components/Head";
 import HomeFeatureList from "../components/Home/HomeFeatureList";
@@ -8,10 +8,12 @@ import strapi from "../api/strapi";
 import { Button, Spinner } from "flowbite-react";
 import FooTer from "../components/FooTer";
 import HomeOrmawaList from "../components/Home/HomeOrmawaList";
-import { FaAngleDown } from "react-icons/fa";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import axios from "axios";
 
 const Home = () => {
+  const [isShowedMoreOrmawa, setIsShowedMoreOrmawa] = useState(false);
+
   const fetchFeaturesList = async () => {
     try {
       const response = await strapi.get("/features?populate=*");
@@ -254,19 +256,28 @@ const Home = () => {
 
           {ormawaQuery.isSuccess && (
             <>
-              <HomeOrmawaList ormawa={ormawaQuery.data} />
-              <div className="flex mt-6 md:mt-8">
-                <div className="mx-auto">
-                  <Button color={"light"}>
-                    <div className="flex flex-col justify-center items-center px-4">
-                      Show More
-                      <div className="text-lg">
-                        <FaAngleDown />
+              <HomeOrmawaList
+                ormawa={ormawaQuery.data}
+                isShowedMore={isShowedMoreOrmawa}
+                onlyShow={12}
+              />
+              {ormawaQuery.data.length > 12 && (
+                <div className="flex mt-6 md:mt-8">
+                  <div className="mx-auto">
+                    <Button
+                      color={"light"}
+                      onClick={() => setIsShowedMoreOrmawa(!isShowedMoreOrmawa)}
+                    >
+                      <div className="flex flex-col justify-center items-center px-4">
+                        {isShowedMoreOrmawa ? "Show Less" : "Show More"}
+                        <div className="text-lg">
+                          {isShowedMoreOrmawa ? <FaAngleUp /> : <FaAngleDown />}
+                        </div>
                       </div>
-                    </div>
-                  </Button>
+                    </Button>
+                  </div>
                 </div>
-              </div>
+              )}
             </>
           )}
         </section>
