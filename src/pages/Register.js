@@ -95,6 +95,7 @@ const Login = () => {
           progress: undefined,
         });
       }
+      throw new Error(error);
     }
   };
 

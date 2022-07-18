@@ -30,7 +30,7 @@ const About = () => {
       const response = await strapi.get("/developers?populate=*");
       return response.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   };
 

@@ -17,7 +17,7 @@ const Home = () => {
       const response = await strapi.get("/features?populate=*");
       return response.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   };
 
@@ -26,7 +26,7 @@ const Home = () => {
       const response = await axios.get("http://localhost:3001/ormawa");
       return response.data;
     } catch (error) {
-      console.log(error);
+      throw new Error(error);
     }
   };
 
@@ -39,11 +39,21 @@ const Home = () => {
     retry: 10,
   });
 
-  if (featuresQuery.isError || ormawaQuery.isError) {
+  if (featuresQuery.isError) {
     return (
       <div className="h-screen flex justify-center items-center">
         <div className="bg-red-600 text-white rounded-md">
           <p className="p-2">{featuresQuery.error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (ormawaQuery.isError) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="bg-red-600 text-white rounded-md">
+          <p className="p-2">{ormawaQuery.error.message}</p>
         </div>
       </div>
     );

@@ -72,11 +72,9 @@ const Login = () => {
           progress: undefined,
         });
 
-        // setLoading(false);
         navigate("/");
       }
     } catch (error) {
-      // setLoading(false);
       if (error.response.status === 400) {
         toast.warn(`${error.response.data.error.message}`, {
           position: "top-right",
@@ -87,8 +85,8 @@ const Login = () => {
           draggable: false,
           progress: undefined,
         });
-        return true;
       }
+      throw new Error(error);
     }
   };
 
