@@ -4,18 +4,26 @@ import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { BrowserRouter } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 // styles
 import "./index.css";
 import "@fontsource/source-sans-3";
 import "react-toastify/dist/ReactToastify.css";
 
+// Create a client
+const queryClient = new QueryClient();
+
 const root = createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <CookiesProvider>
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <App />
+          <ReactQueryDevtools />
+        </QueryClientProvider>
       </CookiesProvider>
     </BrowserRouter>
   </React.StrictMode>

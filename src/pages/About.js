@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "../components/Head";
 import NavBar from "../components/NavBar";
 import strapi from "../api/strapi";
@@ -12,33 +12,42 @@ import {
   Accordion,
 } from "flowbite-react";
 import { useForm } from "react-hook-form";
+import { useQuery } from "react-query";
 
 const About = () => {
-  const [developers, setDevelopers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
+  const fetchDeveloperList = async () => {
+    try {
+      const response = await strapi.get("/developers?populate=*");
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Queries
+  const developerQuery = useQuery(["developers"], fetchDeveloperList, {
+    retry: 10,
+  });
+
+  if (developerQuery.isError) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="bg-red-600 text-white rounded-md">
+          <p className="p-2">{developerQuery.error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
   const onSubmit = (data) => {
     console.log(data);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await strapi.get("/developers?populate=*");
-        setDevelopers(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <>
@@ -73,7 +82,7 @@ const About = () => {
             </p>
           </div>
 
-          {loading ? (
+          {developerQuery.isLoading && (
             <div className="grid grid-rows-3 grid-cols-1 md:grid-rows-1 md:grid-cols-3 gap-5 md:gap-3 lg:gap-4">
               <div className="h-96 md:h-80 lg:h-96 flex justify-center items-center bg-slate-300 rounded-md">
                 <div className="text-center">
@@ -102,8 +111,9 @@ const About = () => {
                 </div>
               </div>
             </div>
-          ) : (
-            <AboutList developers={developers} />
+          )}
+          {developerQuery.isSuccess && (
+            <AboutList developers={developerQuery.data} />
           )}
         </div>
 
@@ -168,9 +178,9 @@ const About = () => {
                   className="flex flex-col gap-2"
                   onSubmit={handleSubmit(onSubmit)}
                 >
-                  {loading && (
+                  {/* {loading && (
                     <div className="absolute inset-0 z-10 bg-white/20" />
-                  )}
+                  )} */}
                   <div>
                     <div className="mb-2 block">
                       <Label htmlFor="fullname" value="Full Name*" />
@@ -179,7 +189,7 @@ const About = () => {
                       color={errors.fullname && "failure"}
                       id="fullname"
                       type="text"
-                      disabled={loading}
+                      // disabled={loading}
                       {...register("fullname", { required: true })}
                     />
                     {errors.fullname && (
@@ -196,7 +206,7 @@ const About = () => {
                       color={errors.email && "failure"}
                       id="email"
                       type="email"
-                      disabled={loading}
+                      // disabled={loading}
                       {...register("email", { required: true })}
                     />
                     {errors.email && (
@@ -213,7 +223,7 @@ const About = () => {
                       id="message"
                       color={errors.message && "failure"}
                       rows={4}
-                      disabled={loading}
+                      // disabled={loading}
                       {...register("message", { required: true })}
                     />
                     {errors.message && (
@@ -229,16 +239,16 @@ const About = () => {
                       width: "auto",
                       marginTop: ".5rem",
                     }}
-                    disabled={loading}
+                    // disabled={loading}
                     color="success"
                   >
-                    {loading ? (
+                    {/* {loading ? (
                       <div className="mr-3">
                         <Spinner size="sm" light={true} /> Loading...
                       </div>
-                    ) : (
-                      "Sign In"
-                    )}
+                    ) : ( */}
+                    Submit
+                    {/* )} */}
                   </Button>
                 </form>
               </div>

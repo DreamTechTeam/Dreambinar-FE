@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Head from "../components/Head";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Button, Label, Spinner, TextInput } from "flowbite-react";
@@ -7,6 +7,7 @@ import strapi from "../api/strapi";
 import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import setExpires from "../utils/setExpires";
+import { useMutation } from "react-query";
 
 const Login = () => {
   const {
@@ -15,7 +16,6 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const isLoggedIn = localStorage.getItem("isLoggedIn")
     ? JSON.parse(localStorage.getItem("isLoggedIn"))
@@ -28,9 +28,7 @@ const Login = () => {
     }
   }, [isLoggedIn, navigate]);
 
-  const onSubmit = async (data) => {
-    setLoading(true);
-
+  const fetchLogin = async (data) => {
     try {
       const response = await strapi.post("/auth/local", {
         identifier: data.email,
@@ -74,11 +72,11 @@ const Login = () => {
           progress: undefined,
         });
 
-        setLoading(false);
+        // setLoading(false);
         navigate("/");
       }
     } catch (error) {
-      setLoading(false);
+      // setLoading(false);
       if (error.response.status === 400) {
         toast.warn(`${error.response.data.error.message}`, {
           position: "top-right",
@@ -92,6 +90,23 @@ const Login = () => {
         return true;
       }
     }
+  };
+
+  // Queries
+  const loginQueries = useMutation(["login"], fetchLogin);
+
+  if (loginQueries.isError) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="bg-red-600 text-white rounded-md">
+          <p className="p-2">{loginQueries.error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const onSubmit = async (data) => {
+    await loginQueries.mutateAsync(data);
   };
 
   return (
@@ -121,7 +136,9 @@ const Login = () => {
               className="flex flex-col gap-2"
               onSubmit={handleSubmit(onSubmit)}
             >
-              {loading && <div className="absolute inset-0 z-10 bg-white/20" />}
+              {loginQueries.isLoading && (
+                <div className="absolute inset-0 z-10 bg-white/20" />
+              )}
               <div>
                 <div className="mb-2 block">
                   <Label htmlFor="email" value="Email*" />
@@ -133,7 +150,7 @@ const Login = () => {
                   defaultValue={
                     cookies.rememberLogin ? cookies.rememberLogin.email : ""
                   }
-                  disabled={loading}
+                  disabled={loginQueries.isLoading}
                   {...register("email", { required: true })}
                 />
                 {errors.email && (
@@ -153,7 +170,7 @@ const Login = () => {
                   defaultValue={
                     cookies.rememberLogin ? cookies.rememberLogin.password : ""
                   }
-                  disabled={loading}
+                  disabled={loginQueries.isLoading}
                   {...register("password", { required: true })}
                 />
                 {errors.password && (
@@ -168,7 +185,7 @@ const Login = () => {
                   type="checkbox"
                   color="primary"
                   defaultChecked={cookies.rememberLogin ? true : ""}
-                  disabled={loading}
+                  disabled={loginQueries.isLoading}
                   {...register("rememberLogin", { required: false })}
                 />
                 <label
@@ -183,10 +200,10 @@ const Login = () => {
                 style={{
                   width: "auto",
                 }}
-                disabled={loading}
+                disabled={loginQueries.isLoading}
                 color="success"
               >
-                {loading ? (
+                {loginQueries.isLoading ? (
                   <div className="mr-3">
                     <Spinner size="sm" light={true} /> Loading...
                   </div>

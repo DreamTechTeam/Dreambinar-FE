@@ -2,14 +2,33 @@ import React from "react";
 import { FaLinkedin, FaInstagram, FaGithub } from "react-icons/fa";
 
 const AboutItem = ({ developer }) => {
-  const developerSocial = developer.socialMedia;
-  const developerImage =
-    developer.profileImg.data.attributes.url;
+  const socialList = [
+    {
+      id: 1,
+      name: "linkedin",
+      link: "/",
+    },
+    {
+      id: 2,
+      name: "instagram",
+      link: "/",
+    },
+    {
+      id: 3,
+      name: "github",
+      link: "/",
+    },
+  ];
+
+  const developerSocial = developer.socialMedia
+    ? developer.socialMedia
+    : socialList;
+  const developerImage = developer.profileImg.data.attributes.url;
 
   return (
     <div
       style={{
-        "backgroundImage": `url(${developerImage})`,
+        backgroundImage: `url(${developerImage})`,
       }}
       className={
         "h-96 rounded-md bg-cover bg-center flex items-end md:h-80 lg:h-96"

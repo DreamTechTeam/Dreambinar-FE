@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Head from "../components/Head";
 import { Link, useNavigate } from "react-router-dom";
 import { Avatar, Button, Label, Spinner, TextInput } from "flowbite-react";
@@ -7,6 +7,7 @@ import strapi from "../api/strapi";
 import { toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import setExpires from "../utils/setExpires";
+import { useMutation } from "react-query";
 
 const Login = () => {
   const {
@@ -16,21 +17,16 @@ const Login = () => {
   } = useForm();
 
   const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies();
   const isLoggedIn = localStorage.getItem("isLoggedIn") || false;
 
   useEffect(() => {
     if (isLoggedIn) {
-      window.location.href = "/login";
       navigate("/");
     }
   }, [isLoggedIn, navigate]);
 
-  const onSubmit = async (data) => {
-    setLoading(true);
-
+  const fetchRegister = async (data) => {
     try {
       const response = await strapi.post("/auth/local/register", {
         username: data.username,
@@ -100,7 +96,23 @@ const Login = () => {
         });
       }
     }
-    setLoading(false);
+  };
+
+  // Queries
+  const registerQueries = useMutation(["register"], fetchRegister);
+
+  if (registerQueries.isError) {
+    return (
+      <div className="h-screen flex justify-center items-center">
+        <div className="bg-red-600 text-white rounded-md">
+          <p className="p-2">{registerQueries.error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const onSubmit = async (data) => {
+    await registerQueries.mutateAsync(data);
   };
 
   return (
@@ -129,7 +141,9 @@ const Login = () => {
               className="flex flex-col gap-2"
               onSubmit={handleSubmit(onSubmit)}
             >
-              {loading && <div className="absolute inset-0 z-10 bg-white/20" />}
+              {registerQueries.isLoading && (
+                <div className="absolute inset-0 z-10 bg-white/20" />
+              )}
 
               <div>
                 <div className="mb-2 block">
@@ -139,7 +153,7 @@ const Login = () => {
                   color={errors.username && "failure"}
                   id="username"
                   type="text"
-                  disabled={loading}
+                  disabled={registerQueries.isLoading}
                   {...register("username", { required: true })}
                 />
                 {errors.username && (
@@ -156,7 +170,7 @@ const Login = () => {
                   color={errors.email && "failure"}
                   id="email"
                   type="email"
-                  disabled={loading}
+                  disabled={registerQueries.isLoading}
                   {...register("email", { required: true })}
                 />
                 {errors.email && (
@@ -173,7 +187,7 @@ const Login = () => {
                   color={errors.password && "failure"}
                   id="password"
                   type="password"
-                  disabled={loading}
+                  disabled={registerQueries.isLoading}
                   {...register("password", { required: true })}
                 />
                 {errors.password && (
@@ -189,7 +203,7 @@ const Login = () => {
                     id="terms"
                     type="checkbox"
                     color={errors.terms ? "failure" : "primary"}
-                    disabled={loading}
+                    disabled={registerQueries.isLoading}
                     {...register("terms", { required: true })}
                   />
                   <label
@@ -219,10 +233,10 @@ const Login = () => {
                 style={{
                   width: "auto",
                 }}
-                disabled={loading}
+                disabled={registerQueries.isLoading}
                 color="success"
               >
-                {loading ? (
+                {registerQueries.isLoading ? (
                   <div className="mr-3">
                     <Spinner size="sm" light={true} /> Loading...
                   </div>
