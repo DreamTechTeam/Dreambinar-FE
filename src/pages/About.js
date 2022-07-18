@@ -58,6 +58,12 @@ const About = () => {
           draggable: false,
           progress: undefined,
         });
+
+        reset({
+          fullName: "",
+          email: "",
+          message: "",
+        });
       }
     } catch (error) {
       toast.warn(`Feedback failed to send, unable to send Feedback right now`, {
@@ -86,12 +92,6 @@ const About = () => {
 
   const onSubmit = async (data) => {
     await feedbackQueries.mutateAsync(data);
-
-    reset({
-      fullName: "",
-      email: "",
-      message: "",
-    });
   };
 
   return (
