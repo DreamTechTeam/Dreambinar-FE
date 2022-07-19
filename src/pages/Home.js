@@ -284,10 +284,8 @@ const Home = () => {
                   <div className="mx-auto">
                     <Button
                       color={"light"}
-                      onClick={
-                        !isShowedMoreOrmawa
-                          ? () => populateMore()
-                          : () => populateLess()
+                      onClick={() =>
+                        !isShowedMoreOrmawa ? populateMore() : populateLess()
                       }
                     >
                       <div className="flex flex-col justify-center items-center px-4">
