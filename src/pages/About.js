@@ -15,7 +15,6 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import FooTer from "../components/FooTer";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const About = () => {
   const {
@@ -41,14 +40,17 @@ const About = () => {
 
   const fetchFeedback = async (data) => {
     try {
-      const response = await axios.post("http://localhost:3001/feedback", {
-        fullName: data.fullName,
-        email: data.email,
-        message: data.message,
-        createdAt: new Date().toISOString(),
+      const response = await strapi.post("/form-contacts", {
+        data: {
+          fullName: data.fullName,
+          email: data.email,
+          message: data.message,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
       });
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         toast.success(`Thanks for sending Feedback ${data.fullName}!`, {
           position: "top-right",
           autoClose: 5000,
@@ -66,6 +68,7 @@ const About = () => {
         });
       }
     } catch (error) {
+      console.log(error);
       toast.warn(`Feedback failed to send, unable to send Feedback right now`, {
         position: "top-right",
         autoClose: 5000,
