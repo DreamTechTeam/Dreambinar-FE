@@ -7,7 +7,7 @@ import strapi from "../api/strapi";
 import { ToastContainer, toast } from "react-toastify";
 import { useCookies } from "react-cookie";
 import setExpires from "../utils/setExpires";
-import { useMutation } from "react-query";
+import { useMutation } from '@tanstack/react-query';
 
 const Login = () => {
   const {

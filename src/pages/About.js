@@ -12,7 +12,7 @@ import {
   Accordion,
 } from "flowbite-react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import FooTer from "../components/FooTer";
 import { toast } from "react-toastify";
 import axios from "axios";

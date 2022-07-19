@@ -21,7 +21,8 @@ const AboutItem = ({ developer }) => {
   ];
 
   const developerSocial =
-    developer.attributes.socialMedia && developer.attributes.socialMedia !== []
+    developer.attributes.socialMedia &&
+    developer.attributes.socialMedia !== "undefined"
       ? developer.attributes.socialMedia
       : socialList;
 

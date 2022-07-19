@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Head from "../components/Head";
 import HomeFeatureList from "../components/Home/HomeFeatureList";
 import NavBar from "../components/NavBar";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import strapi from "../api/strapi";
 import { Button, Spinner } from "flowbite-react";
 import FooTer from "../components/FooTer";
