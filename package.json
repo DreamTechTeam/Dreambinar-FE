@@ -5,8 +5,10 @@
   "dependencies": {
     "@fontsource/source-sans-3": "^4.5.10",
     "@reduxjs/toolkit": "^1.8.3",
+    "@tanstack/query-sync-storage-persister": "^4.0.5",
     "@tanstack/react-query": "^4.0.3",
     "@tanstack/react-query-devtools": "^4.0.3",
+    "@tanstack/react-query-persist-client": "^4.0.5",
     "axios": "^0.27.2",
     "concurrently": "^7.3.0",
     "flowbite": "^1.4.7",

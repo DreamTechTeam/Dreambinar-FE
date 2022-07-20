@@ -34,9 +34,7 @@ const About = () => {
   };
 
   // Queries
-  const developerQuery = useQuery(["developers"], fetchDeveloperList, {
-    retry: 10,
-  });
+  const developerQuery = useQuery(["developers"], fetchDeveloperList);
 
   const fetchFeedback = async (data) => {
     try {

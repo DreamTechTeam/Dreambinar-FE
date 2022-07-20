@@ -1,6 +1,7 @@
 import React from "react";
 
 const HomeFeaturesItem = ({ feature }) => {
+  console.log(feature);
   const featureImage =
     feature.featureImage.data.attributes.url &&
     feature.featureImage.data.attributes.url !== ""

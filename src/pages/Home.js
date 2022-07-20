@@ -51,13 +51,9 @@ const Home = () => {
   };
 
   // Queries
-  const featuresQuery = useQuery(["features"], fetchFeaturesList, {
-    retry: 10,
-  });
+  const featuresQuery = useQuery(["features"], fetchFeaturesList);
 
-  const ormawaQuery = useQuery(["ormawa", populate], fetchOrmawaList, {
-    retry: 10,
-  });
+  const ormawaQuery = useQuery(["ormawa", populate], fetchOrmawaList);
 
   if (featuresQuery.isError) {
     return (
