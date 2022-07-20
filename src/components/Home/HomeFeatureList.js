@@ -7,7 +7,7 @@ const HomeFeatureList = ({ features }) => {
   return (
     <div className="flex flex-wrap">
       {featuresData.map((feature) => (
-        <HomeFeaturesItem key={feature.id} feature={feature.attributes} />
+        <HomeFeaturesItem key={feature.id} feature={feature} />
       ))}
     </div>
   );

@@ -26,7 +26,12 @@ const About = () => {
 
   const fetchDeveloperList = async () => {
     try {
-      const response = await strapi.get("/developers?populate=*");
+      const response = await strapi.get("/developers?populate=*", {
+        headers: {
+          Authorization:
+            "Bearer 2705bddd81d2b0875e6d5fed27debd33c59b4909b934ab3b5dae1ac35f4c45e30b4d0ccff1241b465d391fbd9052ca8b6f9830ce518d259035294e5e9307efe3b407618300309ea59a0783b887189fffd7c95a4a0c4ccd83ac8ccd63b73413c4643dd9078fb607248a8671455f188e7667a5c6046caa98f61b0959b31b6e8f64",
+        },
+      });
       return response.data;
     } catch (error) {
       throw new Error(error);

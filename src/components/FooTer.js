@@ -130,7 +130,7 @@ const FooTer = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-between pt-5 pb-10 border-t sm:flex-row">
+      <div className="flex flex-col justify-between pt-5 pb-5 border-t sm:flex-row">
         <p className="text-sm text-gray-600">
           © Copyright 2022 Dreamtech Team. All rights reserved.
         </p>
