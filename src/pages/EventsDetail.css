@@ -1,0 +1,44 @@
+.description-wrapper h1 {
+  @apply font-black font-sans text-lg border-l-4 border-green-700 pl-2 my-2;
+}
+
+.description-wrapper h2,
+.description-wrapper h3,
+.description-wrapper h4,
+.description-wrapper h5,
+.description-wrapper h6 {
+  @apply font-black font-sans text-base border-l-4 border-green-700 pl-2 my-2;
+}
+
+.description-wrapper p {
+  @apply text-base leading-relaxed my-2;
+}
+.description-wrapper b {
+  @apply font-bold;
+}
+
+.description-wrapper strong {
+  @apply font-black;
+}
+
+.description-wrapper i {
+  @apply italic;
+}
+
+.description-wrapper u {
+  @apply underline decoration-2;
+}
+
+.description-wrapper ul {
+  @apply list-disc my-4 pl-10;
+}
+
+.description-wrapper ol {
+  @apply list-decimal my-4 pl-10;
+}
+
+.description-wrapper strike,
+.description-wrapper del,
+.description-wrapper s {
+  @apply line-through;
+}

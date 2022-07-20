@@ -1,7 +1,7 @@
 import React from "react";
 import Head from "../components/Head";
 import NavBar from "../components/NavBar";
-import { Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   FaCalendarAlt,
   FaClock,
@@ -9,12 +9,84 @@ import {
   FaMoneyBillWave,
 } from "react-icons/fa";
 import FooTer from "../components/FooTer";
-import { abbreviateNumber, INDONESIAN_SYMBOL } from "../utils/abbreviateNumber";
+import strapi from "../api/strapi";
+import { useQuery } from "@tanstack/react-query";
+import dateFormatted from "../utils/dateFormatted";
+import timeToWIB from "../utils/timeToWIB";
+import moneyFormat from "../utils/moneyFormat";
+import parse from "html-react-parser";
+import "./EventsDetail.css";
+import EventItem from "../components/Events/EventItem";
 
 const EventsDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const fetchEvent = async (id) => {
+    try {
+      const response = await strapi.get(
+        `/events/${id}?populate[0]=category&populate[1]=user_id.profileImg&populate[2]=eventImages`,
+        {
+          headers: {
+            Authorization:
+              "Bearer 2705bddd81d2b0875e6d5fed27debd33c59b4909b934ab3b5dae1ac35f4c45e30b4d0ccff1241b465d391fbd9052ca8b6f9830ce518d259035294e5e9307efe3b407618300309ea59a0783b887189fffd7c95a4a0c4ccd83ac8ccd63b73413c4643dd9078fb607248a8671455f188e7667a5c6046caa98f61b0959b31b6e8f64",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.clear();
+      navigate("/404");
+    }
+  };
+
+  const fetchEventsRandom = async (id) => {
+    try {
+      const response = await strapi.get(
+        `/events?populate[0]=category&populate[1]=user_id.profileImg&populate[2]=eventImages&filters[id][$ne]=${id}`,
+        {
+          headers: {
+            Authorization:
+              "Bearer 2705bddd81d2b0875e6d5fed27debd33c59b4909b934ab3b5dae1ac35f4c45e30b4d0ccff1241b465d391fbd9052ca8b6f9830ce518d259035294e5e9307efe3b407618300309ea59a0783b887189fffd7c95a4a0c4ccd83ac8ccd63b73413c4643dd9078fb607248a8671455f188e7667a5c6046caa98f61b0959b31b6e8f64",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.clear();
+      navigate("/404");
+    }
+  };
+
+  const { data, isLoading, error } = useQuery(["event", id], () =>
+    fetchEvent(id)
+  );
+  const eventsRandom = useQuery(["eventsRandom", id], () =>
+    fetchEventsRandom(id)
+  );
+
+  if (isLoading) return "Loading...";
+  if (eventsRandom.isLoading) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+  if (eventsRandom.error)
+    return "An error has occurred: " + eventsRandom.error.message;
+
+  const eventImage =
+    data.data.eventImages && data.data.eventImages !== ""
+      ? data.data.eventImages.url
+      : "https://via.placeholder.com/150";
+
+  const profileImage =
+    data.data.user_id.profileImg && data.data.user_id.profileImg.url !== ""
+      ? data.data.user_id.profileImg.url
+      : "https://via.placeholder.com/150";
+
   return (
     <>
-      <Head title="Events" />
+      <Head title={data.data.title} />
 
       <header>
         <NavBar />
@@ -77,8 +149,8 @@ const EventsDetail = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
-                    Ocean Dream Samudra
+                  <span className="ml-1 text-sm font-medium md:ml-2">
+                    {data.data.title}
                   </span>
                 </div>
               </li>
@@ -88,14 +160,19 @@ const EventsDetail = () => {
 
           {/* Section Event Image and Organizer Start */}
           <div className="grid overflow-hidden grid-cols-1 grid-rows-1 lg:gap-9 lg:grid-cols-3 mt-4 lg:h-full">
-            <div className="box lg:col-span-2 bg-[url('https://s3-ap-southeast-1.amazonaws.com/loket-production-sg/images/banner/20210916052758.jpg')] rounded-lg bg-center bg-cover h-72 lg:h-full lg:items-stretch"></div>
+            <div
+              style={{
+                backgroundImage: `url(${eventImage})`,
+              }}
+              className="box lg:col-span-2 rounded-lg bg-center bg-cover h-72 lg:h-full lg:items-stretch"
+            ></div>
             <div className="box lg:col-start-3 rounded-lg lg:border-2 lg:border-gray-100">
               <div className="w-full block mt-4 lg:mt-0 lg:p-4">
                 <div className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 rounded-lg dark:bg-yellow-200 dark:text-yellow-900 mb-2 max-w-fit">
-                  <p className="py-2 px-4">Wisata & Liburan</p>
+                  <p className="py-2 px-4">{data.data.category.name}</p>
                 </div>
                 <p className="text-gray-800 dark:text-white text-xl font-black font-sans mb-5">
-                  Ocean Dream Samudra
+                  {data.data.title}
                 </p>
 
                 <div className="flex flex-col gap-2 mb-5">
@@ -106,7 +183,12 @@ const EventsDetail = () => {
                       </p>
                     </div>
                     <p className="text-md font-medium items-stretch flex justify-center">
-                      25 Juni - 31 Juli 2022
+                      {dateFormatted(data.data.dateStart) ===
+                      dateFormatted(data.data.dateEnd)
+                        ? dateFormatted(data.data.dateStart)
+                        : `${dateFormatted(
+                            data.data.dateStart
+                          )} - ${dateFormatted(data.data.dateEnd)}`}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -116,7 +198,8 @@ const EventsDetail = () => {
                       </p>
                     </div>
                     <p className="text-md font-medium items-stretch flex justify-center">
-                      10:00 - 23:00 WIB
+                      {timeToWIB(data.data.timeStart)} -{" "}
+                      {timeToWIB(data.data.timeEnd)}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -125,8 +208,8 @@ const EventsDetail = () => {
                         <FaMapMarkerAlt />
                       </p>
                     </div>
-                    <p className="text-md font-medium items-stretch flex justify-center">
-                      Ocean Dream Samudra, DKI Jakarta
+                    <p className="text-md font-medium items-stretch flex justify-center capitalize">
+                      {data.data.location}
                     </p>
                   </div>
                   <div className="flex items-center gap-3">
@@ -136,7 +219,7 @@ const EventsDetail = () => {
                       </p>
                     </div>
                     <p className="text-md font-medium items-stretch flex justify-center">
-                      Rp. 350.000
+                      {moneyFormat(data.data.price)}
                     </p>
                   </div>
                 </div>
@@ -146,13 +229,17 @@ const EventsDetail = () => {
                   <div className="flex items-center">
                     <div className="block">
                       <img
-                        alt="profil"
-                        src="https://www.tailwind-kit.com/images/person/6.jpg"
-                        className="mx-auto object-cover rounded-full h-10 w-10 "
+                        alt={
+                          data.data.user_id.profileImg
+                            ? data.data.user_id.profileImg.alternativeText
+                            : data.data.user_id.username + " profile"
+                        }
+                        src={profileImage}
+                        className="mx-auto object-cover rounded-full h-10 w-10"
                       />
                     </div>
                     <p className="text-gray-800 dark:text-white text-sm ml-4">
-                      Jean Jancques
+                      {data.data.user_id.username}
                     </p>
                   </div>
                 </div>
@@ -169,33 +256,21 @@ const EventsDetail = () => {
                   <h2 className="text-xl font-black font-sans underline underline-offset-8 decoration-wavy">
                     Description
                   </h2>
-                  <div className="mt-8">
-                    <p className="text-md dark:text-gray-400">
-                      <strong className="font-black text-gray-800 dark:text-white">
-                        Wengi
-                      </strong>{" "}
-                      merupakan sebuah wahana di mana penonton dapat merasakan
-                      apa yang dialami seorang psychic light trance medium
-                      melalui virtual reality experience. Event ini menantang
-                      keberanian penonton serta memberikan pengalaman yang tak
-                      terlupakan.
-                    </p>
-                    <p>
-                      Tujuan dari wahana ini tidak lain hanya untuk menghibur
-                      dan memberikan gambaran bahwa di dalam kegelapan pasti
-                      selalu ada cahaya.
-                    </p>
+                  <div className="mt-8"></div>
+                  <div className="text-md dark:text-gray-400 description-wrapper">
+                    {parse(data.data.description)}
                   </div>
                 </div>
-
                 <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
                   <div className="w-full block lg:mt-0 p-2 lg:p-4">
-                    <button
-                      type="button"
-                      className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 w-full dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                    <a
+                      href={data.data.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 flex justify-center items-center rounded-lg font-bold font-sans px-5 py-2.5 w-full dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-center"
                     >
                       Register Now
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -204,225 +279,19 @@ const EventsDetail = () => {
           {/* Section Event Information & Price End */}
 
           {/* Section Event Related Start */}
-          <section>
+          <section className="mb-8 md:mb-12 lg:mb-16">
             <div className="mt-8 md:mt-12 mx-auto">
               <div className="grid">
                 <div className="lg:col-span-2">
                   <h2 className="text-xl font-black font-sans underline underline-offset-8 decoration-wavy">
-                    Related Events
+                    Maybe you also like
                   </h2>
 
-                  <div className="grid mt-8 grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-3 lg:gap-4 items-stretch py-4">
+                  <div className="grid mt-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-3 lg:gap-4 items-stretch py-4">
                     {/* Event List Start */}
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
+                    {eventsRandom.data.data.slice(0, 4).map((event) => (
+                      <EventItem key={event.id} {...event} />
+                    ))}
                     {/* Event List End */}
                   </div>
                 </div>

@@ -1,12 +1,33 @@
+import { useQuery } from "@tanstack/react-query";
 import { TextInput } from "flowbite-react";
 import React from "react";
-import { Link } from "react-router-dom";
+import strapi from "../api/strapi";
 import FooTer from "../components/FooTer";
 import Head from "../components/Head";
 import NavBar from "../components/NavBar";
-import { abbreviateNumber, INDONESIAN_SYMBOL } from "../utils/abbreviateNumber";
+import EventList from "../components/Events/EventList";
 
 const Events = () => {
+  const fetchEvents = async () => {
+    try {
+      const response = await strapi.get(
+        "/events?populate[0]=user_id.profileImg&populate[1]=eventImages&sort[0]=id",
+        {
+          headers: {
+            Authorization:
+              "Bearer 2705bddd81d2b0875e6d5fed27debd33c59b4909b934ab3b5dae1ac35f4c45e30b4d0ccff1241b465d391fbd9052ca8b6f9830ce518d259035294e5e9307efe3b407618300309ea59a0783b887189fffd7c95a4a0c4ccd83ac8ccd63b73413c4643dd9078fb607248a8671455f188e7667a5c6046caa98f61b0959b31b6e8f64",
+          },
+        }
+      );
+
+      return response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const { data, isSuccess } = useQuery(["events"], fetchEvents);
+
   return (
     <>
       <Head title="Events" />
@@ -189,7 +210,7 @@ const Events = () => {
                           id="countries"
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         >
-                          <option selected="">Sort</option>
+                          <option value="">Sort</option>
                           <option value="US">United States</option>
                           <option value="CA">Canada</option>
                           <option value="FR">France</option>
@@ -199,261 +220,9 @@ const Events = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 mt-4 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-3 lg:gap-4 items-stretch">
-                    {/* Event List Start */}
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-
-                    <Link
-                      to="/events/1"
-                      className="overflow-hidden shadow-lg rounded-lg h-full w-full cursor-pointer m-auto"
-                    >
-                      <div className="w-full block">
-                        <img
-                          alt="blog"
-                          src="https://www.tailwind-kit.com/images/blog/1.jpg"
-                          className="max-h-40 w-full object-cover"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <div className="w-full block h-full">
-                          <p className="text-gray-800 dark:text-white text-xl h-14 font-black font-sans mb-1">
-                            Mentega Krisna !
-                          </p>
-                          <p className="text-green-500 text-md font-medium mb-2">
-                            19 Juli 2022
-                          </p>
-                          <span className="bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">
-                            {abbreviateNumber(250000, INDONESIAN_SYMBOL)} /
-                            Orang
-                          </span>
-                        </div>
-                      </div>
-                      <div className="p-4 pt-0">
-                        <div className="border-t-2 my-3"></div>
-                        <div className="flex items-center">
-                          <div className="block">
-                            <img
-                              alt="profil"
-                              src="https://www.tailwind-kit.com/images/person/6.jpg"
-                              className="mx-auto object-cover rounded-full h-10 w-10 "
-                            />
-                          </div>
-                          <p className="text-gray-800 dark:text-white text-sm ml-4">
-                            Jean Jancques
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                    {/* Event List End */}
-                  </div>
+                  {/* Event List Start */}
+                  {isSuccess && <EventList events={data} />}
+                  {/* Event List End */}
 
                   {/* Pagination Start */}
                   <div className="mt-8">
