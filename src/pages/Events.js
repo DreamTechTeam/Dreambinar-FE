@@ -1,17 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import { TextInput } from "flowbite-react";
-import React from "react";
+import { Pagination, TextInput } from "flowbite-react";
+import React, { useState } from "react";
 import strapi from "../api/strapi";
 import FooTer from "../components/FooTer";
 import Head from "../components/Head";
 import NavBar from "../components/NavBar";
 import EventList from "../components/Events/EventList";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { Spinner } from "flowbite-react";
 
 const Events = () => {
-  const fetchEvents = async () => {
+  const [page, setPage] = useState(1);
+  const [keywords, setKeywords] = useState("");
+  const [asideFilterToggled, setAsideFilterToggled] = useState(false);
+
+  const fetchEvents = async (page) => {
     try {
       const response = await strapi.get(
-        "/events?populate[0]=user_id.profileImg&populate[1]=eventImages&sort[0]=id&pagination[page]=2&pagination[pageSize]=6",
+        `/events?populate[0]=user_id.profileImg&populate[1]=eventImages&populate[2]=category&sort[0]=id&pagination[page]=${page}&pagination[pageSize]=6&filters[title][$containsi]=${keywords}`,
         {
           headers: {
             Authorization:
@@ -26,7 +32,41 @@ const Events = () => {
     }
   };
 
-  const { data, isSuccess } = useQuery(["events"], fetchEvents);
+  const fetchCategory = async () => {
+    try {
+      const response = await strapi.get(`/categories`, {
+        headers: {
+          Authorization:
+            "Bearer 2705bddd81d2b0875e6d5fed27debd33c59b4909b934ab3b5dae1ac35f4c45e30b4d0ccff1241b465d391fbd9052ca8b6f9830ce518d259035294e5e9307efe3b407618300309ea59a0783b887189fffd7c95a4a0c4ccd83ac8ccd63b73413c4643dd9078fb607248a8671455f188e7667a5c6046caa98f61b0959b31b6e8f64",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  const { data, isSuccess, isError, isLoading } = useQuery(
+    ["events", page, keywords],
+    () => fetchEvents(page)
+  );
+  const categories = useQuery(["categories"], fetchCategory);
+
+  const onPagePaginationChange = (page, data) => {
+    if (page < 1) {
+      setPage(1);
+      return true;
+    }
+
+    if (page > data.meta.pagination.pageCount) {
+      setPage(data.meta.pagination.pageCount);
+      return true;
+    }
+
+    setPage(page);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <>
@@ -60,67 +100,54 @@ const Events = () => {
             <div className="max-w-screen-xl mt-8 md:mt-12 lg:mt-16 mx-auto mb-8 md:mb-12 lg:mb-16">
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:items-start">
                 {/* Section Aside Start */}
-                <div className="lg:sticky lg:top-4">
+                <div className="lg:sticky lg:top-4 mb-2 lg:mb-0">
                   <div className="overflow-hidden border border-gray-200 rounded-lg none md:block">
                     <summary className="flex items-center justify-between px-5 py-3 bg-gray-100 lg:hidden">
                       <span className="text-sm font-medium">
                         Toggle Filters
                       </span>
-                      <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+                      <button
+                        className={`inline-flex items-center p-2 text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600 cursor-pointer text-lg`}
+                        onClick={() => {
+                          setAsideFilterToggled(!asideFilterToggled);
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M4 6h16M4 12h16M4 18h16"
-                        />
-                      </svg>
+                        <GiHamburgerMenu />
+                      </button>
                     </summary>
+                    {/* Aside Filter Start */}
                     <form
-                      action=""
-                      className="border-t border-gray-200 lg:border-t-0"
+                      className={`${
+                        asideFilterToggled ? "hidden" : "block"
+                      } lg:block border-t border-gray-200 lg:border-t-0`}
                     >
+                      {/* Field Filter Category Start */}
                       <fieldset>
                         <legend className="block w-full px-5 py-3 text-base font-sans font-medium bg-gray-50">
                           Category
                         </legend>
+                        {categories.isLoading && "Loading..."}
                         <div className="px-5 py-6 space-y-2">
-                          <div className="flex items-center">
-                            <input
-                              id="game"
-                              type="checkbox"
-                              name="type[game]"
-                              className="w-5 h-5 border-gray-300 rounded"
-                            />
-                            <label
-                              htmlFor="game"
-                              className="ml-3 text-sm font-medium"
-                            >
-                              Game
-                            </label>
-                          </div>
-                          <div className="flex items-center">
-                            <input
-                              id="outdoor"
-                              type="checkbox"
-                              name="type[outdoor]"
-                              className="w-5 h-5 border-gray-300 rounded"
-                            />
-                            <label
-                              htmlFor="outdoor"
-                              className="ml-3 text-sm font-medium"
-                            >
-                              Outdoor
-                            </label>
-                          </div>
+                          {categories.isSuccess &&
+                            categories.data.data.map(({ id, name }) => (
+                              <div className="flex items-center" key={id}>
+                                <input
+                                  id={name}
+                                  type="checkbox"
+                                  name={`type[${name}]`}
+                                  className="w-5 h-5 border-gray-300 rounded"
+                                />
+                                <label
+                                  htmlFor={name}
+                                  className="ml-3 text-sm font-medium"
+                                >
+                                  {name}
+                                </label>
+                              </div>
+                            ))}
                           <div className="pt-2">
                             <button
-                              type="button"
+                              type="reset"
                               className="text-xs font-sans text-gray-500 underline"
                             >
                               Reset Type
@@ -128,6 +155,7 @@ const Events = () => {
                           </div>
                         </div>
                       </fieldset>
+                      {/* Field Filter Category Start */}
                       <div>
                         <fieldset>
                           <legend className="block w-full px-5 py-3 text-base font-sans font-medium bg-gray-50">
@@ -190,18 +218,26 @@ const Events = () => {
                         </button>
                       </div>
                     </form>
+                    {/* Aside Filter End */}
                   </div>
                 </div>
                 {/* Section Aside End */}
 
                 {/* Section Events Start */}
+
+                {/* Search & Sort Events Start */}
                 <div className="lg:col-span-3">
                   <div className="flex items-center justify-between">
                     <div className="w-full">
                       <TextInput
                         id="search"
                         type="text"
-                        placeholder="Input Keyword ..."
+                        placeholder="Find Events ..."
+                        value={keywords}
+                        onChange={(e) => {
+                          setKeywords(e.target.value);
+                          setPage(1);
+                        }}
                       />
                     </div>
                     <div className="ml-4">
@@ -219,84 +255,58 @@ const Events = () => {
                       </div>
                     </div>
                   </div>
+                  {/* Search & Sort Events Start */}
+
+                  {isError && <p>Error</p>}
+
+                  {isLoading && (
+                    <div className="mt-8 flex justify-center items-center w-full h-[21.25rem]">
+                      <Spinner
+                        aria-label="Center-aligned spinner example"
+                        size="xl"
+                      />
+                    </div>
+                  )}
+
+                  {isSuccess && data.data.length === 0 && (
+                    <div className="mt-8 flex justify-center items-center w-full h-[21.25rem]">
+                      <h2>Event is Empty!</h2>
+                    </div>
+                  )}
 
                   {/* Event List Start */}
                   {isSuccess && <EventList events={data} />}
                   {/* Event List End */}
 
                   {/* Pagination Start */}
-                  <div className="mt-8">
-                    <ol className="flex justify-center lg:justify-start space-x-1 text-xs font-medium">
-                      <li>
-                        <a
-                          href="?page=1"
-                          className="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-3 h-3"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="?page=1"
-                          className="block w-8 h-8 leading-8 text-center border border-gray-100 rounded"
-                        >
-                          {" "}
-                          1{" "}
-                        </a>
-                      </li>
-                      <li className="block w-8 h-8 leading-8 text-center text-white bg-green-600 border-green-600 rounded">
-                        2
-                      </li>
-                      <li>
-                        <a
-                          href="?page=3"
-                          className="block w-8 h-8 leading-8 text-center border border-gray-100 rounded"
-                        >
-                          {" "}
-                          3{" "}
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="?page=4"
-                          className="block w-8 h-8 leading-8 text-center border border-gray-100 rounded"
-                        >
-                          {" "}
-                          4{" "}
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="?page=3"
-                          className="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="w-3 h-3"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </a>
-                      </li>
-                    </ol>
-                  </div>
+                  {isSuccess &&
+                  data.meta.pagination.total > data.meta.pagination.pageSize &&
+                  page < 2 ? (
+                    <div className={`mt-8 [&>button]:bg-green-50`}>
+                      <Pagination
+                        currentPage={page}
+                        totalPages={data.meta.pagination.pageCount}
+                        onPageChange={(page) =>
+                          onPagePaginationChange(page, data)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {isSuccess && page > 1 ? (
+                    <div className={`mt-8 [&>button]:bg-green-50`}>
+                      <Pagination
+                        currentPage={page}
+                        totalPages={data.meta.pagination.pageCount}
+                        onPageChange={(page) =>
+                          onPagePaginationChange(page, data)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   {/* Pagination End */}
                 </div>
                 {/* Section Events End */}

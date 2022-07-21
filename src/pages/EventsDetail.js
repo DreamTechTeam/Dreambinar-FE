@@ -18,7 +18,7 @@ import moneyFormat from "../utils/moneyFormat";
 import parse from "html-react-parser";
 import "./EventsDetail.css";
 import EventItem from "../components/Events/EventItem";
-import { Tooltip } from "flowbite-react";
+import { Spinner, Tooltip } from "flowbite-react";
 import { RWebShare } from "react-web-share";
 
 const EventsDetail = () => {
@@ -73,8 +73,12 @@ const EventsDetail = () => {
     fetchEventsRandom(id)
   );
 
-  if (isLoading) return "Loading...";
-  if (eventsRandom.isLoading) return "Loading...";
+  if (isLoading || eventsRandom.isLoading)
+    return (
+      <div className="flex justify-center items-center w-screen h-screen">
+        <Spinner aria-label="Center-aligned spinner example" size="xl" />
+      </div>
+    );
 
   if (error) return "An error has occurred: " + error.message;
   if (eventsRandom.error)
@@ -244,35 +248,38 @@ const EventsDetail = () => {
                 </div>
 
                 <div>
-                  <div className="border-t-2 border-dotted my-3"></div>
-                  <div className="flex items-center">
-                    <div className="block">
-                      <img
-                        alt={
-                          data.data.user_id.profileImg
-                            ? data.data.user_id.profileImg.alternativeText
-                            : data.data.user_id.username + " profile"
+                  <Link to={`/users/${data.data.user_id.id}`}>
+                    <div className="border-t-2 border-dotted my-3"></div>
+                    <div className="flex items-center">
+                      <div className="block">
+                        <img
+                          alt={
+                            data.data.user_id.profileImg
+                              ? data.data.user_id.profileImg.alternativeText
+                              : data.data.user_id.username + " profile"
+                          }
+                          src={profileImage}
+                          className="mx-auto object-cover rounded-full h-10 w-10"
+                        />
+                      </div>
+                      <Tooltip
+                        content={data.data.user_id.fullName}
+                        placement="bottom"
+                        trigger={
+                          data.data.user_id.fullName.length > 36
+                            ? "hover"
+                            : "none"
                         }
-                        src={profileImage}
-                        className="mx-auto object-cover rounded-full h-10 w-10"
-                      />
+                      >
+                        <p className="text-gray-800 dark:text-white text-sm ml-4">
+                          {data.data.user_id.fullName.length > 36
+                            ? data.data.user_id.fullName.substring(0, 36) +
+                              "..."
+                            : data.data.user_id.fullName}
+                        </p>
+                      </Tooltip>
                     </div>
-                    <Tooltip
-                      content={data.data.user_id.fullName}
-                      placement="bottom"
-                      trigger={
-                        data.data.user_id.fullName.length > 36
-                          ? "hover"
-                          : "none"
-                      }
-                    >
-                      <p className="text-gray-800 dark:text-white text-sm ml-4">
-                        {data.data.user_id.fullName.length > 36
-                          ? data.data.user_id.fullName.substring(0, 36) + "..."
-                          : data.data.user_id.fullName}
-                      </p>
-                    </Tooltip>
-                  </div>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -315,7 +322,7 @@ const EventsDetail = () => {
                         }}
                         onClick={() => console.log("shared successfully!")}
                       >
-                        <button className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 flex w-full justify-center items-center text-center">
+                        <button className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 flex w-full justify-center items-center text-center mb-0">
                           Share Events{" "}
                           <i className="text-lg ml-2">
                             <IoShareSocialSharp />
