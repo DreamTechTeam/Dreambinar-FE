@@ -1,13 +1,14 @@
 import React from "react";
 import Head from "../components/Head";
 import NavBar from "../components/NavBar";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   FaCalendarAlt,
   FaClock,
   FaMapMarkerAlt,
   FaMoneyBillWave,
 } from "react-icons/fa";
+import { IoShareSocialSharp } from "react-icons/io5";
 import FooTer from "../components/FooTer";
 import strapi from "../api/strapi";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +18,8 @@ import moneyFormat from "../utils/moneyFormat";
 import parse from "html-react-parser";
 import "./EventsDetail.css";
 import EventItem from "../components/Events/EventItem";
+import { Tooltip } from "flowbite-react";
+import { RWebShare } from "react-web-share";
 
 const EventsDetail = () => {
   const { id } = useParams();
@@ -59,6 +62,9 @@ const EventsDetail = () => {
       navigate("/404");
     }
   };
+
+  let location = useLocation();
+  let currentUrl = `https://dreambinar.vercel.app${location.pathname}`;
 
   const { data, isLoading, error } = useQuery(["event", id], () =>
     fetchEvent(id)
@@ -208,9 +214,19 @@ const EventsDetail = () => {
                         <FaMapMarkerAlt />
                       </p>
                     </div>
-                    <p className="text-md font-medium items-stretch flex justify-center capitalize">
-                      {data.data.location}
-                    </p>
+                    <Tooltip
+                      content={data.data.location}
+                      placement="bottom"
+                      trigger={
+                        data.data.location.length > 36 ? "hover" : "none"
+                      }
+                    >
+                      <p className="text-md font-medium items-stretch flex justify-center capitalize">
+                        {data.data.location.length > 36
+                          ? data.data.location.substring(0, 36) + "..."
+                          : data.data.location}
+                      </p>
+                    </Tooltip>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="bg-green-700 rounded h-6 w-6 flex justify-center items-center">
@@ -219,7 +235,10 @@ const EventsDetail = () => {
                       </p>
                     </div>
                     <p className="text-md font-medium items-stretch flex justify-center">
-                      {moneyFormat(data.data.price)}
+                      {data.data.price
+                        ? `${moneyFormat(data.data.price)}`
+                        : "Free"}
+                      {data.data.priceType ? ` / ${data.data.priceType}` : ""}
                     </p>
                   </div>
                 </div>
@@ -238,9 +257,21 @@ const EventsDetail = () => {
                         className="mx-auto object-cover rounded-full h-10 w-10"
                       />
                     </div>
-                    <p className="text-gray-800 dark:text-white text-sm ml-4">
-                      {data.data.user_id.username}
-                    </p>
+                    <Tooltip
+                      content={data.data.user_id.fullName}
+                      placement="bottom"
+                      trigger={
+                        data.data.user_id.fullName.length > 36
+                          ? "hover"
+                          : "none"
+                      }
+                    >
+                      <p className="text-gray-800 dark:text-white text-sm ml-4">
+                        {data.data.user_id.fullName.length > 36
+                          ? data.data.user_id.fullName.substring(0, 36) + "..."
+                          : data.data.user_id.fullName}
+                      </p>
+                    </Tooltip>
                   </div>
                 </div>
               </div>
@@ -261,16 +292,37 @@ const EventsDetail = () => {
                     {parse(data.data.description)}
                   </div>
                 </div>
-                <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
-                  <div className="w-full block lg:mt-0 p-2 lg:p-4">
-                    <a
-                      href={data.data.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 flex justify-center items-center rounded-lg font-bold font-sans px-5 py-2.5 w-full dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-center"
-                    >
-                      Register Now
-                    </a>
+                <div className="flex flex-col gap-1 lg:gap-4">
+                  <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
+                    <div className="w-full block lg:mt-0 p-2 lg:p-4">
+                      <a
+                        href={data.data.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 flex justify-center items-center rounded-lg font-bold font-sans px-5 py-2.5 w-full dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-center"
+                      >
+                        Register Now
+                      </a>
+                    </div>
+                  </div>
+                  <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
+                    <div className="w-full block lg:mt-0 p-2 lg:p-4">
+                      <RWebShare
+                        data={{
+                          text: "Checkout this event",
+                          url: `${currentUrl}`,
+                          title: `${data.data.title}`,
+                        }}
+                        onClick={() => console.log("shared successfully!")}
+                      >
+                        <button className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 flex w-full justify-center items-center text-center">
+                          Share Events{" "}
+                          <i className="text-lg ml-2">
+                            <IoShareSocialSharp />
+                          </i>
+                        </button>
+                      </RWebShare>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -11,7 +11,7 @@ const Events = () => {
   const fetchEvents = async () => {
     try {
       const response = await strapi.get(
-        "/events?populate[0]=user_id.profileImg&populate[1]=eventImages&sort[0]=id",
+        "/events?populate[0]=user_id.profileImg&populate[1]=eventImages&sort[0]=id&pagination[page]=2&pagination[pageSize]=6",
         {
           headers: {
             Authorization:
