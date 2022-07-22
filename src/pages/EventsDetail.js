@@ -255,7 +255,7 @@ const EventsDetail = () => {
                 </div>
 
                 <div>
-                  <Link to={`/users/${data.data.user_id.id}`}>
+                  <Link to={`/user/${data.data.user_id.id}`}>
                     <div className="border-t-2 border-dotted my-3"></div>
                     <div className="flex items-center">
                       <div className="block">

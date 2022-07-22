@@ -108,7 +108,7 @@ const EventItem = ({
           </div>
         </div>
       </Link>
-      <Link to={`/users/${user_id.id}`}>
+      <Link to={`/user/${user_id.id}`}>
         <div className="p-4 pt-0">
           <div className="border-t-2 my-3"></div>
           <div className="flex items-center">
