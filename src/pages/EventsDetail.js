@@ -20,6 +20,7 @@ import "./EventsDetail.css";
 import EventItem from "../components/Events/EventItem";
 import { Spinner, Tooltip } from "flowbite-react";
 import { RWebShare } from "react-web-share";
+import isExpired from "../utils/isExpired";
 
 const EventsDetail = () => {
   const { id } = useParams();
@@ -192,14 +193,20 @@ const EventsDetail = () => {
                         <FaCalendarAlt />
                       </p>
                     </div>
-                    <p className="text-md font-medium items-stretch flex justify-center">
+                    {isExpired(data.data.dateEnd) ? (
+                      <p className="text-md font-medium items-stretch flex justify-center">
+                        Event Expired
+                      </p>
+                    ) : (
+                      <p className="text-md font-medium items-stretch flex justify-center">
                       {dateFormatted(data.data.dateStart) ===
                       dateFormatted(data.data.dateEnd)
                         ? dateFormatted(data.data.dateStart)
                         : `${dateFormatted(
                             data.data.dateStart
                           )} - ${dateFormatted(data.data.dateEnd)}`}
-                    </p>
+                      </p>
+                    )}
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="bg-green-700 rounded h-6 w-6 flex justify-center items-center">
@@ -300,7 +307,7 @@ const EventsDetail = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1 lg:gap-4">
-                  <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
+                  <div className={`${isExpired(data.data.dateEnd) && 'hidden'} border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0`}>
                     <div className="w-full block lg:mt-0 p-2 lg:p-4">
                       <a
                         href={data.data.url}
