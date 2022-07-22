@@ -43,10 +43,12 @@ const EventItem = ({
                 </div>
                 <div
                   className={`text-sm font-normal ${
-                    price ? "bg-red-500" : "bg-green-500"
+                    price !== "0" ? "bg-red-500" : "bg-green-500"
                   } rounded-md my-1 w-1/2 overflow-hidden flex justify-center items-center`}
                 >
-                  {price ? abbreviateNumber(price, INDONESIAN_SYMBOL) : "Free"}
+                  {price !== "0"
+                    ? abbreviateNumber(price, INDONESIAN_SYMBOL)
+                    : "Free"}
                 </div>
               </div>
             </div>
@@ -81,17 +83,15 @@ const EventItem = ({
               </p>
             )}
             {isExpired(dateEnd) ? (
-              <p className="text-md font-medium mb-2">
-                Event Expired
-              </p>
+              <p className="text-md font-medium mb-2">Event Expired</p>
             ) : (
               <>
                 <p className="text-md font-medium mb-2 block lg:hidden xl:block">
-                {dateFormatted(dateStart) === dateFormatted(dateEnd)
-                  ? dateFormatted(dateStart)
-                  : dateEvent.length > 30
-                  ? `${dateEvent.slice(0, 30)}...`
-                  : dateEvent}
+                  {dateFormatted(dateStart) === dateFormatted(dateEnd)
+                    ? dateFormatted(dateStart)
+                    : dateEvent.length > 30
+                    ? `${dateEvent.slice(0, 30)}...`
+                    : dateEvent}
                 </p>
                 <p className="text-md font-medium mb-2 hidden lg:block xl:hidden">
                   {dateFormatted(dateStart) === dateFormatted(dateEnd)

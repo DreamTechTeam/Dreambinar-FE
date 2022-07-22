@@ -199,12 +199,12 @@ const EventsDetail = () => {
                       </p>
                     ) : (
                       <p className="text-md font-medium items-stretch flex justify-center">
-                      {dateFormatted(data.data.dateStart) ===
-                      dateFormatted(data.data.dateEnd)
-                        ? dateFormatted(data.data.dateStart)
-                        : `${dateFormatted(
-                            data.data.dateStart
-                          )} - ${dateFormatted(data.data.dateEnd)}`}
+                        {dateFormatted(data.data.dateStart) ===
+                        dateFormatted(data.data.dateEnd)
+                          ? dateFormatted(data.data.dateStart)
+                          : `${dateFormatted(
+                              data.data.dateStart
+                            )} - ${dateFormatted(data.data.dateEnd)}`}
                       </p>
                     )}
                   </div>
@@ -246,7 +246,7 @@ const EventsDetail = () => {
                       </p>
                     </div>
                     <p className="text-md font-medium items-stretch flex justify-center">
-                      {data.data.price
+                      {data.data.price !== "0"
                         ? `${moneyFormat(data.data.price)}`
                         : "Free"}
                       {data.data.priceType ? ` / ${data.data.priceType}` : ""}
@@ -307,7 +307,11 @@ const EventsDetail = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-1 lg:gap-4">
-                  <div className={`${isExpired(data.data.dateEnd) && 'hidden'} border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0`}>
+                  <div
+                    className={`${
+                      isExpired(data.data.dateEnd) && "hidden"
+                    } border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0`}
+                  >
                     <div className="w-full block lg:mt-0 p-2 lg:p-4">
                       <a
                         href={data.data.url}

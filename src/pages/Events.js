@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 const Events = () => {
   const [page, setPage] = useState(1);
   const [keywords, setKeywords] = useState("");
+  const [sorting, setSorting] = useState("");
   const [category, setCategory] = useState(null);
   const [isPaid, setIsPaid] = useState(null);
   const [isOnline, setIsOnline] = useState(null);
@@ -24,7 +25,8 @@ const Events = () => {
     category = null,
     isPaid = null,
     isOnline = null,
-    keywords = ""
+    keywords = "",
+    sorting = ""
   ) => {
     try {
       const pageCondition = category || isPaid !== null ? 1 : page;
@@ -39,8 +41,39 @@ const Events = () => {
       const keywordsCondition =
         keywords !== "" ? `&filters[title][$containsi]=${keywords}` : "";
 
+      const sortingCondition = (value) => {
+        let query = `&sort[0]=id`;
+        switch (value) {
+          case "ASC":
+            query = `&sort[0]=title%3Aasc`;
+            break;
+          case "DESC":
+            query = `&sort[0]=title%3Adesc`;
+            break;
+          case "HIGH_PRICE":
+            query = `&sort[0]=price%3Adesc`;
+            break;
+          case "LOW_PRICE":
+            query = `&sort[0]=price%3Aasc`;
+            break;
+          case "LATEST_EVENT":
+            query = `&sort[0]=createdAt%3Adesc`;
+            break;
+          case "OLDEST_EVENT":
+            query = `&sort[0]=createdAt%3Aasc`;
+            break;
+
+          default:
+            query = `&sort[0]=id`;
+            break;
+        }
+        return query;
+      };
+
+      const sortingValue = sortingCondition(sorting);
+
       const response = await strapi.get(
-        `/events?populate[0]=user_id.profileImg&populate[1]=eventImages&populate[2]=category&sort[0]=id&filters[isDraft][$eq]=false&pagination[page]=${pageCondition}&pagination[pageSize]=6${categoryCondition}${paidCondition}${isOnlineCondition}${keywordsCondition}`,
+        `/events?populate[0]=user_id.profileImg&populate[1]=eventImages&populate[2]=category${sortingValue}&filters[isDraft][$eq]=false&pagination[page]=${pageCondition}&pagination[pageSize]=6${categoryCondition}${paidCondition}${isOnlineCondition}${keywordsCondition}`,
         {
           headers: {
             Authorization:
@@ -71,8 +104,8 @@ const Events = () => {
   };
 
   const { data, isSuccess, isError, refetch, isLoading } = useQuery(
-    ["events", page, category, isPaid, isOnline, keywords],
-    () => fetchEvents(page, category, isPaid, isOnline, keywords)
+    ["events", page, category, isPaid, isOnline, keywords, sorting],
+    () => fetchEvents(page, category, isPaid, isOnline, keywords, sorting)
   );
 
   const categories = useQuery(["categories"], fetchCategory);
@@ -95,6 +128,13 @@ const Events = () => {
   const onSearchChange = (e) => {
     setPage(1);
     setKeywords(e.target.value);
+
+    refetch();
+  };
+
+  const onSortingChange = (e) => {
+    setPage(1);
+    setSorting(e.target.value);
 
     refetch();
   };
@@ -332,12 +372,15 @@ const Events = () => {
                         <select
                           id="countries"
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          onChange={onSortingChange}
                         >
                           <option value="">Sort</option>
-                          <option value="US">United States</option>
-                          <option value="CA">Canada</option>
-                          <option value="FR">France</option>
-                          <option value="DE">Germany</option>
+                          <option value="ASC">Event Name (A-Z)</option>
+                          <option value="DESC">Event Name (Z-A)</option>
+                          <option value="HIGH_PRICE">Price (High)</option>
+                          <option value="LOW_PRICE">Price (Low)</option>
+                          <option value="LATEST_EVENT">Latest Event</option>
+                          <option value="OLDEST_EVENT">Oldest Event</option>
                         </select>
                       </div>
                     </div>
