@@ -23,6 +23,8 @@ const EventItem = ({
       ? eventImages.url
       : "https://via.placeholder.com/150";
 
+  const dateEvent = `${dateFormatted(dateStart)} - ${dateFormatted(dateEnd)}`;
+
   return (
     <div className="overflow-hidden shadow-lg rounded-lg h-full w-full m-auto">
       <Link to={`/events/${id}`}>
@@ -77,10 +79,19 @@ const EventItem = ({
                 {title}
               </p>
             )}
-            <p className="text-md font-medium mb-2">
+            <p className="text-md font-medium mb-2 block lg:hidden xl:block">
               {dateFormatted(dateStart) === dateFormatted(dateEnd)
                 ? dateFormatted(dateStart)
-                : `${dateFormatted(dateStart)} - ${dateFormatted(dateEnd)}`}
+                : dateEvent.length > 30
+                ? `${dateEvent.slice(0, 30)}...`
+                : dateEvent}
+            </p>
+            <p className="text-md font-medium mb-2 hidden lg:block xl:hidden">
+              {dateFormatted(dateStart) === dateFormatted(dateEnd)
+                ? dateFormatted(dateStart)
+                : dateEvent.length > 20
+                ? `${dateEvent.slice(0, 20)}...`
+                : dateEvent}
             </p>
             <div className="bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-900 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded w-fit overflow-hidden text-ellipsis">
               {category.name}

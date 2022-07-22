@@ -7,17 +7,40 @@ import Head from "../components/Head";
 import NavBar from "../components/NavBar";
 import EventList from "../components/Events/EventList";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { Spinner } from "flowbite-react";
+import { Spinner, Radio } from "flowbite-react";
+import { useForm } from "react-hook-form";
 
 const Events = () => {
   const [page, setPage] = useState(1);
   const [keywords, setKeywords] = useState("");
+  const [category, setCategory] = useState(null);
+  const [isPaid, setIsPaid] = useState(null);
+  const [isOnline, setIsOnline] = useState(null);
   const [asideFilterToggled, setAsideFilterToggled] = useState(false);
+  const { register, handleSubmit, reset } = useForm();
 
-  const fetchEvents = async (page) => {
+  const fetchEvents = async (
+    page,
+    category = null,
+    isPaid = null,
+    isOnline = null,
+    keywords = ""
+  ) => {
     try {
+      const pageCondition = category || isPaid !== null ? 1 : page;
+      const categoryCondition =
+        category !== null
+          ? `&filters[category][name][$containsi]=${category}`
+          : "";
+      const paidCondition =
+        isPaid !== null ? `&filters[isPaid][$containsi]=${isPaid}` : "";
+      const isOnlineCondition =
+        isOnline !== null ? `&filters[isOnline][$containsi]=${isOnline}` : "";
+      const keywordsCondition =
+        keywords !== "" ? `&filters[title][$containsi]=${keywords}` : "";
+
       const response = await strapi.get(
-        `/events?populate[0]=user_id.profileImg&populate[1]=eventImages&populate[2]=category&sort[0]=id&pagination[page]=${page}&pagination[pageSize]=6&filters[title][$containsi]=${keywords}`,
+        `/events?populate[0]=user_id.profileImg&populate[1]=eventImages&populate[2]=category&sort[0]=id&filters[isDraft][$eq]=false&pagination[page]=${pageCondition}&pagination[pageSize]=6${categoryCondition}${paidCondition}${isOnlineCondition}${keywordsCondition}`,
         {
           headers: {
             Authorization:
@@ -47,10 +70,11 @@ const Events = () => {
     }
   };
 
-  const { data, isSuccess, isError, isLoading } = useQuery(
-    ["events", page, keywords],
-    () => fetchEvents(page)
+  const { data, isSuccess, isError, refetch, isLoading } = useQuery(
+    ["events", page, category, isPaid, isOnline, keywords],
+    () => fetchEvents(page, category, isPaid, isOnline, keywords)
   );
+
   const categories = useQuery(["categories"], fetchCategory);
 
   const onPagePaginationChange = (page, data) => {
@@ -66,6 +90,36 @@ const Events = () => {
 
     setPage(page);
     window.scrollTo(0, 0);
+  };
+
+  const onSearchChange = (e) => {
+    setPage(1);
+    setKeywords(e.target.value);
+
+    refetch();
+  };
+
+  const onFilterSubmit = (data) => {
+    setPage(1);
+    setCategory(data.category);
+    setIsPaid(data.isPaid);
+    setIsOnline(data.isOnline);
+
+    refetch();
+  };
+
+  const onFilterReset = () => {
+    reset({
+      category: null,
+      isPaid: null,
+    });
+
+    setPage(1);
+    setCategory(null);
+    setIsPaid(null);
+    setIsOnline(null);
+
+    refetch();
   };
 
   return (
@@ -120,6 +174,7 @@ const Events = () => {
                       className={`${
                         asideFilterToggled ? "hidden" : "block"
                       } lg:block border-t border-gray-200 lg:border-t-0`}
+                      onSubmit={handleSubmit(onFilterSubmit)}
                     >
                       {/* Field Filter Category Start */}
                       <fieldset>
@@ -131,11 +186,13 @@ const Events = () => {
                           {categories.isSuccess &&
                             categories.data.data.map(({ id, name }) => (
                               <div className="flex items-center" key={id}>
-                                <input
+                                <Radio
+                                  color="success"
                                   id={name}
-                                  type="checkbox"
-                                  name={`type[${name}]`}
-                                  className="w-5 h-5 border-gray-300 rounded"
+                                  name="categories"
+                                  value={name}
+                                  defaultChecked={false}
+                                  {...register("category", { required: false })}
                                 />
                                 <label
                                   htmlFor={name}
@@ -145,29 +202,24 @@ const Events = () => {
                                 </label>
                               </div>
                             ))}
-                          <div className="pt-2">
-                            <button
-                              type="reset"
-                              className="text-xs font-sans text-gray-500 underline"
-                            >
-                              Reset Type
-                            </button>
-                          </div>
                         </div>
                       </fieldset>
-                      {/* Field Filter Category Start */}
+                      {/* Field Filter Category End */}
+
+                      {/* Field Filter Paid or Free Start */}
                       <div>
                         <fieldset>
                           <legend className="block w-full px-5 py-3 text-base font-sans font-medium bg-gray-50">
-                            Type
+                            Pricing
                           </legend>
                           <div className="px-5 py-6 space-y-2">
                             <div className="flex items-center">
-                              <input
+                              <Radio
                                 id="paid"
-                                type="checkbox"
-                                name="paid"
-                                className="w-5 h-5 border-gray-300 rounded"
+                                name="isPaid"
+                                value={true}
+                                defaultChecked={false}
+                                {...register("isPaid", { required: false })}
                               />
                               <label
                                 htmlFor="paid"
@@ -176,12 +228,14 @@ const Events = () => {
                                 Paid
                               </label>
                             </div>
+
                             <div className="flex items-center">
-                              <input
+                              <Radio
                                 id="free"
-                                type="checkbox"
-                                name="free"
-                                className="w-5 h-5 border-gray-300 rounded"
+                                name="isPaid"
+                                value={false}
+                                defaultChecked={false}
+                                {...register("isPaid", { required: false })}
                               />
                               <label
                                 htmlFor="free"
@@ -190,28 +244,64 @@ const Events = () => {
                                 Free
                               </label>
                             </div>
-                            <div className="pt-2">
-                              <button
-                                type="button"
-                                className="text-xs font-sans text-gray-500 underline"
+                          </div>
+                        </fieldset>
+                      </div>
+                      {/* Field Filter Paid or Free End */}
+
+                      {/* Field Filter Type Start */}
+                      <div>
+                        <fieldset>
+                          <legend className="block w-full px-5 py-3 text-base font-sans font-medium bg-gray-50">
+                            Type
+                          </legend>
+                          <div className="px-5 py-6 space-y-2">
+                            <div className="flex items-center">
+                              <Radio
+                                id="online"
+                                name="isOnline"
+                                value={true}
+                                defaultChecked={false}
+                                {...register("isOnline", { required: false })}
+                              />
+                              <label
+                                htmlFor="online"
+                                className="ml-3 text-sm font-medium"
                               >
-                                Reset Age
-                              </button>
+                                Online
+                              </label>
+                            </div>
+
+                            <div className="flex items-center">
+                              <Radio
+                                id="offline"
+                                name="isOnline"
+                                value={false}
+                                defaultChecked={false}
+                                {...register("isOnline", { required: false })}
+                              />
+                              <label
+                                htmlFor="offline"
+                                className="ml-3 text-sm font-medium"
+                              >
+                                Offline
+                              </label>
                             </div>
                           </div>
                         </fieldset>
                       </div>
+                      {/* Field Filter Type End */}
                       <div className="flex justify-between px-5 py-3 border-t border-gray-200">
                         <button
-                          name="reset"
-                          type="button"
-                          className="text-xs font-sans font-medium text-gray-600 underline rounded"
+                          onClick={onFilterReset}
+                          type="reset"
+                          className="text-xs font-sans font-medium text-gray-600 hover:text-green-700 hover:font-bold rounded"
                         >
                           Reset All
                         </button>
                         <button
                           name="commit"
-                          type="button"
+                          type="submit"
                           className="px-5 py-3 text-xs font-sans font-medium text-white bg-green-600 rounded"
                         >
                           Apply Filters
@@ -227,20 +317,17 @@ const Events = () => {
 
                 {/* Search & Sort Events Start */}
                 <div className="lg:col-span-3">
-                  <div className="flex items-center justify-between">
-                    <div className="w-full">
+                  <div className="grid grid-cols-3 grid-rows-1 items-center gap-4">
+                    <div className="w-full col-span-2">
                       <TextInput
                         id="search"
                         type="text"
                         placeholder="Find Events ..."
                         value={keywords}
-                        onChange={(e) => {
-                          setKeywords(e.target.value);
-                          setPage(1);
-                        }}
+                        onChange={onSearchChange}
                       />
                     </div>
-                    <div className="ml-4">
+                    <div className="w-full">
                       <div id="select">
                         <select
                           id="countries"
@@ -257,7 +344,11 @@ const Events = () => {
                   </div>
                   {/* Search & Sort Events Start */}
 
-                  {isError && <p>Error</p>}
+                  {isError && (
+                    <div className="mt-8 flex justify-center items-center w-full h-[21.25rem]">
+                      <h2>Error!</h2>
+                    </div>
+                  )}
 
                   {isLoading && (
                     <div className="mt-8 flex justify-center items-center w-full h-[21.25rem]">
