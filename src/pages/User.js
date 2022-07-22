@@ -123,7 +123,7 @@ const User = () => {
               <span clspanss="block relative h-32 w-32">
                 <img
                   alt="by aldi sigun on Unsplash"
-                  src={profileImage}
+                  src={isSuccess ? profileImage : "https://via.placeholder.com/150"}
                   className="mx-auto object-cover rounded-lg h-24 w-24 lg:h-40 lg:w-40 bg-white p-1"
                 />
               </span>
@@ -132,17 +132,17 @@ const User = () => {
               <div className="grid overflow-hidden grid-cols-1 grid-rows-1 lg:grid-cols-3 lg:gap-9">
                 <div className="lg:col-span-2">
                   <h2 className="text-2xl font-black font-sans text-green-800 dark:text-gray-300">
-                    {data.fullName}
+                    {isSuccess ? data.fullName : ""}
                   </h2>
                   <p className="mt-2 text-md dark:text-gray-400 description-wrapper">
-                    {data.bio || ""}
+                    {isSuccess ? data.bio : ""}
                   </p>
                 </div>
                 <div className="flex flex-col gap-1 lg:gap-4">
                   <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
                     <div className="w-full block lg:mt-0 p-2 lg:p-4">
                       <a
-                        href={`mailto:${data.email || "example@mail.com"}`}
+                        href={`mailto:${isSuccess ? data.email : "example@mail.com"}`}
                         target="_blank"
                         rel="noreferrer"
                         className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 flex justify-center items-center rounded-lg font-bold font-sans px-5 py-2.5 w-full dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-center"
@@ -164,14 +164,14 @@ const User = () => {
           </h2>
         </div>
         <div>
-          {isLoading && (
+          {userEventsQuery.isLoading && (
             <div className="flex justify-center items-center w-full h-[26.125rem]">
               <Spinner aria-label="Center-aligned spinner example" size="xl" />
             </div>
           )}
 
           {/* Event List Start */}
-          {isSuccess && (
+          {userEventsQuery.isSuccess && (
             <div className="container px-4 md:px-12 lg:px-16 mx-auto grid mt-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-3 lg:gap-4 items-stretch py-4">
               {/* Event List Start */}
               {userEventsQuery.data.data.map((event) => (
@@ -183,7 +183,7 @@ const User = () => {
           {/* Event List End */}
 
           {/* Pagination Start */}
-          {isSuccess &&
+          {userEventsQuery.isSuccess &&
           userEventsQuery.data.meta.pagination.total >
             userEventsQuery.data.meta.pagination.pageSize &&
           page < 2 ? (
@@ -201,7 +201,7 @@ const User = () => {
           ) : (
             ""
           )}
-          {isSuccess && page > 1 ? (
+          {userEventsQuery.isSuccess && page > 1 ? (
             <div
               className={`mt-8 [&>button]:bg-green-50 container mx-auto px-4 md:px-12 lg:px-16 flex justify-center lg:justify-end`}
             >
