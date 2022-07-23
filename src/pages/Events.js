@@ -221,10 +221,18 @@ const Events = () => {
                         <legend className="block w-full px-5 py-3 text-base font-sans font-medium bg-gray-50">
                           Category
                         </legend>
-                        {categories.isLoading && "Loading..."}
-                        <div className="px-5 py-6 space-y-2">
-                          {categories.isSuccess &&
-                            categories.data.data.map(({ id, name }) => (
+                        {categories.isLoading && (
+                          <div className="flex justify-center items-center w-full h-32">
+                            <Spinner
+                              aria-label="Center-aligned spinner example"
+                              size="md"
+                            />
+                          </div>
+                        )}
+
+                        {categories.isSuccess && (
+                          <div className="px-5 py-6 space-y-2">
+                            {categories.data.data.map(({ id, name }) => (
                               <div className="flex items-center" key={id}>
                                 <Radio
                                   color="success"
@@ -242,7 +250,8 @@ const Events = () => {
                                 </label>
                               </div>
                             ))}
-                        </div>
+                          </div>
+                        )}
                       </fieldset>
                       {/* Field Filter Category End */}
 

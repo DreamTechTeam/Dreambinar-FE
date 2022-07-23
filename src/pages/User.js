@@ -123,7 +123,9 @@ const User = () => {
               <span clspanss="block relative h-32 w-32">
                 <img
                   alt="by aldi sigun on Unsplash"
-                  src={isSuccess ? profileImage : "https://via.placeholder.com/150"}
+                  src={
+                    isSuccess ? profileImage : "https://via.placeholder.com/150"
+                  }
                   className="mx-auto object-cover rounded-lg h-24 w-24 lg:h-40 lg:w-40 bg-white p-1"
                 />
               </span>
@@ -142,7 +144,9 @@ const User = () => {
                   <div className="border-2 border-gray-100 rounded-lg h-fit mt-4 lg:mt-0">
                     <div className="w-full block lg:mt-0 p-2 lg:p-4">
                       <a
-                        href={`mailto:${isSuccess ? data.email : "example@mail.com"}`}
+                        href={`mailto:${
+                          isSuccess ? data.email : "example@mail.com"
+                        }`}
                         target="_blank"
                         rel="noreferrer"
                         className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 flex justify-center items-center rounded-lg font-bold font-sans px-5 py-2.5 w-full dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 text-center"
