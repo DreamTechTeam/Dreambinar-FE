@@ -1,0 +1,7 @@
+.side_active {
+  @apply bg-gray-900 shadow-lg [&>svg]:text-white [&>h3]:text-white;
+}
+
+.side_inactive {
+  @apply hover:bg-gray-900 hover:shadow-lg [&>svg]:text-gray-600 [&>svg]:group-hover:text-white [&>h3]:group-hover:text-gray-800;
+}

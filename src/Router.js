@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
+import Dashboard from "./pages/Dashboard";
 import Events from "./pages/Events";
 import EventsDetail from "./pages/EventsDetail";
 import Home from "./pages/Home";
@@ -22,6 +23,7 @@ const Router = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/user/:id" element={<User />} />
+        <Route path="/dashboard" element={<Dashboard />}></Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ScrollToTop>
