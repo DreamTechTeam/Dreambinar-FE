@@ -97,7 +97,9 @@ const EventsDetail = () => {
 
   return (
     <>
-      <Head title={data.data.title} />
+      <Head title={data.data.title}>
+        <meta name="description" content={data.data.description} />
+      </Head>
 
       <header>
         <NavBar />

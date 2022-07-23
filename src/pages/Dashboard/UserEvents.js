@@ -2,15 +2,16 @@ import React from "react";
 import DashboardLayout from "../../components/Dashboard/DashboardLayout";
 import Head from "../../components/Head";
 
-const Dashboard = () => {
+const UserEvents = () => {
   return (
     <>
-      <Head title="Dashboard">
-        <meta name="description" content="Dashboard" />
+      <Head title="My Events">
+        <meta name="description" content="My Events" />
       </Head>
-      <DashboardLayout title="Dashboard">
+
+      <DashboardLayout title="My Events">
         <p className="mt-1.5 text-sm text-gray-500">
-          Your website has seen a 52% increase in traffic in the last
+          Your website has seen a 110% increase in traffic in the last
           month. Keep it up! 🚀
         </p>
       </DashboardLayout>
@@ -18,4 +19,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default UserEvents;
