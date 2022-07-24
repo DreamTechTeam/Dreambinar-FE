@@ -8,6 +8,8 @@ import { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import LogRocket from 'logrocket';
+import setupLogRocketReact from 'logrocket-react';
 
 // styles
 import "./index.css";
@@ -26,6 +28,10 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// LogRocket
+LogRocket.init('jcrzqa/dreambinar');
+setupLogRocketReact(LogRocket);
 
 const root = createRoot(document.getElementById("root"));
 root.render(
