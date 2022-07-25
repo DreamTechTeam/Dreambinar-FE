@@ -2,17 +2,17 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
-import Dashboard from "./pages/Dashboard.example";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import Events from "./pages/Events";
 import EventsDetail from "./pages/EventsDetail";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/Dashboard/Profile";
 import Register from "./pages/Register";
 import User from "./pages/User";
 import UserEvents from "./pages/Dashboard/UserEvents";
 import CreateEvent from "./pages/Dashboard/CreateEvent";
+import Settings from "./pages/Dashboard/Settings";
 
 const Router = () => {
   return (
@@ -30,7 +30,7 @@ const Router = () => {
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="/dashboard/events" element={<UserEvents />}/>
         <Route path="/dashboard/events/add" element={<CreateEvent />}/>
-        <Route path="/dashboard/settings" element={<Profile />}/>
+        <Route path="/dashboard/settings" element={<Settings />}/>
 
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -13,7 +13,6 @@ import setupLogRocketReact from 'logrocket-react';
 
 // styles
 import "./css/style.css";
-import './charts/ChartjsConfig';
 import "@fontsource/source-sans-3";
 import "react-toastify/dist/ReactToastify.css";
 
