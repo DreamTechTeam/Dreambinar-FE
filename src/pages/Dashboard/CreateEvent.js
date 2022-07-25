@@ -1,11 +1,11 @@
 import DashboardLayout from "../../components/Dashboard/DasboardLayout";
 
-const Profile = () => {
+const CreateEvent = () => {
     return (
         <DashboardLayout>
-            <h1>Hello Profile</h1>
+            <h1>Hello Create Event</h1>
         </DashboardLayout>
     )
 }
 
-export default Profile;
+export default CreateEvent;

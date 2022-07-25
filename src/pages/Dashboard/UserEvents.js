@@ -1,22 +1,15 @@
-import React from "react";
-import DashboardLayout from "../../components/Dashboard/DashboardLayout";
-import Head from "../../components/Head";
+import { Link } from "react-router-dom";
+import DashboardLayout from "../../components/Dashboard/DasboardLayout";
+import Datepicker from "../../partials/actions/Datepicker";
 
 const UserEvents = () => {
-  return (
-    <>
-      <Head title="My Events">
-        <meta name="description" content="My Events" />
-      </Head>
-
-      <DashboardLayout title="My Events">
-        <p className="mt-1.5 text-sm text-gray-500">
-          Your website has seen a 110% increase in traffic in the last
-          month. Keep it up! 🚀
-        </p>
-      </DashboardLayout>
-    </>
-  );
-};
+    return (
+        <DashboardLayout>
+            <h1>Hello User Events</h1>
+            <Datepicker />
+            <Link to="/dashboard/events/add" className="rounded-md bg-sky-400 p-1 text-white hover:bg-sky-400 focus:ring-2 active:bg-sky-300">Create Event</Link>
+        </DashboardLayout>
+    )
+}
 
 export default UserEvents;

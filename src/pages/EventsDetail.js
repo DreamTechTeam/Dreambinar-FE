@@ -95,6 +95,10 @@ const EventsDetail = () => {
       ? data.data.user_id.profileImg.url
       : "https://via.placeholder.com/150";
 
+  const dateEvent = `${dateFormatted(data.data.dateStart)} - ${dateFormatted(
+    data.data.dateEnd
+  )}`;
+
   return (
     <>
       <Head title={data.data.title}>
@@ -200,14 +204,22 @@ const EventsDetail = () => {
                         Event Expired
                       </p>
                     ) : (
-                      <p className="text-md font-medium items-stretch flex justify-center">
-                        {dateFormatted(data.data.dateStart) ===
-                        dateFormatted(data.data.dateEnd)
-                          ? dateFormatted(data.data.dateStart)
-                          : `${dateFormatted(
-                              data.data.dateStart
-                            )} - ${dateFormatted(data.data.dateEnd)}`}
-                      </p>
+                      <Tooltip
+                        content={dateEvent}
+                        placement="bottom"
+                        trigger={
+                          dateEvent.length > 27 ? "hover" : "none"
+                        }
+                      >
+                        <p className="text-md font-medium items-stretch flex justify-center">
+                          {dateFormatted(data.data.dateStart) ===
+                          dateFormatted(data.data.dateEnd)
+                            ? dateFormatted(data.data.dateStart)
+                            : dateEvent.length > 27
+                            ? `${dateEvent.slice(0, 27)}...`
+                            : dateEvent}
+                        </p>
+                      </Tooltip>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
@@ -231,12 +243,12 @@ const EventsDetail = () => {
                       content={data.data.location}
                       placement="bottom"
                       trigger={
-                        data.data.location.length > 36 ? "hover" : "none"
+                        data.data.location.length > 38 ? "hover" : "none"
                       }
                     >
                       <p className="text-md font-medium items-stretch flex justify-center capitalize">
-                        {data.data.location.length > 36
-                          ? data.data.location.substring(0, 36) + "..."
+                        {data.data.location.length > 29
+                          ? data.data.location.substring(0, 29) + "..."
                           : data.data.location}
                       </p>
                     </Tooltip>

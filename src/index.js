@@ -5,14 +5,15 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { BrowserRouter } from "react-router-dom";
 import { CookiesProvider } from "react-cookie";
 import { QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import LogRocket from 'logrocket';
 import setupLogRocketReact from 'logrocket-react';
 
 // styles
-import "./index.css";
+import "./css/style.css";
+import './charts/ChartjsConfig';
 import "@fontsource/source-sans-3";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -43,7 +44,7 @@ root.render(
           persistOptions={{ persister }}
         >
           <App />
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </PersistQueryClientProvider>
       </CookiesProvider>
     </BrowserRouter>
