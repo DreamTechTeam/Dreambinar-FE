@@ -1,6 +1,6 @@
 import DashboardLayout from "../../components/Dashboard/DasboardLayout";
 import Head from "../../components/Head";
-import { HiLockClosed, HiPencil } from "react-icons/hi";
+import { HiIdentification, HiMail, HiPencil } from "react-icons/hi";
 import {
   Avatar,
   Button,
@@ -10,12 +10,13 @@ import {
   Textarea,
   TextInput,
 } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { FaIdCard } from "react-icons/fa";
 
 const Settings = () => {
   const [modal, setModal] = useState(false);
-  const [email, setEmail] = useState("dadang@gmail.com");
+  const [email, setEmail] = useState("");
   const [username, setUsername] = useState("dadang_steven");
   const {
     register,
@@ -44,6 +45,11 @@ const Settings = () => {
   const onClose = () => {
     setModal(false);
   };
+
+  useEffect(() => {
+    setEmail("jese@gmail.com");
+    setUsername("jese_leos");
+  });
 
   return (
     <>
@@ -88,12 +94,12 @@ const Settings = () => {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mt-6">
                 <div className="mb-2 block">
-                  <Label htmlFor="email4" value="Email Address" />
+                  <Label htmlFor="email" value="Email Address" />
                 </div>
                 <TextInput
-                  id="email4"
+                  id="email"
                   type="email"
-                  icon={HiLockClosed}
+                  icon={HiMail}
                   value={email}
                   disabled={true}
                   readOnly={true}
@@ -108,7 +114,7 @@ const Settings = () => {
                 <TextInput
                   id="username"
                   type="text"
-                  icon={HiLockClosed}
+                  icon={HiIdentification}
                   value={username}
                   disabled={true}
                   readOnly={true}
@@ -123,7 +129,8 @@ const Settings = () => {
                 <TextInput
                   id="fullName"
                   type="text"
-                  defaultValue="Flowbite John"
+                  defaultValue="Jese Leos"
+                  icon={FaIdCard}
                   {...register("fullName", { required: true })}
                 />
                 {errors.fullName && (
@@ -198,20 +205,21 @@ const Settings = () => {
           <Modal.Body>
             <div className="space-y-6 px-6 pb-4 sm:pb-6 lg:px-8 xl:pb-8">
               <form onSubmit={handleSubmit2(onSubmit2)}>
-                <div id="fileUpload" className="mb-6">
+                <div id="fileUpload" className="mb-3">
                   <div className="mb-2 block">
                     <Label htmlFor="file" value="Upload Profile Picture" />
                   </div>
                   <FileInput
+                    accept="image/*"
                     id="file"
                     helperText="Upload photo file to change your profile pictures"
                     {...register2("pictures", { required: true })}
                   />
                   {errors2.pictures && (
-                  <p className="text-xs mt-1 text-red-800 font-bold">
-                    * This field is required
-                  </p>
-                )}
+                    <p className="text-xs mt-1 text-red-800 font-bold">
+                      * This field is required
+                    </p>
+                  )}
                 </div>
                 <Button type="submit">Change Profile Picture</Button>
               </form>

@@ -2,6 +2,7 @@ import {
   Button,
   FileInput,
   Label,
+  Select,
   TextInput,
   ToggleSwitch,
 } from "flowbite-react";
@@ -9,6 +10,14 @@ import { useEffect, useRef, useState } from "react";
 import DashboardLayout from "../../components/Dashboard/DasboardLayout";
 import Head from "../../components/Head";
 import { Editor } from "@tinymce/tinymce-react";
+import {
+  HiLocationMarker,
+  HiOutlineStatusOffline,
+  HiStatusOnline,
+} from "react-icons/hi";
+import { FaMoneyBill, FaMoneyBillAlt } from "react-icons/fa";
+import { MdGroup, MdMoneyOff, MdPerson, MdTitle } from "react-icons/md";
+import { BiCalendar, BiCalendarCheck } from "react-icons/bi";
 
 const CreateEvent = () => {
   const [selectedImage, setSelectedImage] = useState();
@@ -18,6 +27,8 @@ const CreateEvent = () => {
   const [dateTimeStart, setDateTimeStart] = useState(null);
   const [dateTimeEnd, setDateTimeEnd] = useState(null);
   const [dateTimeWarningMsg, setDateTimeWarningMsg] = useState();
+  const [priceType, setPriceType] = useState();
+  const [nominalPrice, setNominalPrice] = useState();
 
   const editorRef = useRef(null);
 
@@ -35,17 +46,17 @@ const CreateEvent = () => {
     ) {
       return setDateTimeWarningMsg("Date start cannot over than date end");
     }
-    
+
     setDateTimeWarningMsg("");
   }, [dateTimeStart, dateTimeEnd]);
 
   return (
     <>
-      <Head title="My Events" />
+      <Head title="Create Events" />
 
       <DashboardLayout>
         <form>
-          <div className="bg-white md:col-span-2 pt-10 pb-5 md:px-8 xl:px-10 border-b">
+          <div className="bg-white md:col-span-2 pt-10 pb-5 px-6 md:px-8 xl:px-10 border-b">
             <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1">
               Create your event
             </h1>
@@ -55,15 +66,16 @@ const CreateEvent = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-1 bg-white rounded-lg">
-            <div className="row-start-2 md:row-start-auto md:col-span-2 p-6 md:p-8 xl:p-10 border-r-0 md:border-r">
+            <div className="row-end-2 md:row-end-auto md:col-span-2 px-6 pt-6 pb-0 md:p-8 xl:p-10 border-r-0 md:border-r">
               <div className="mb-6">
                 <div className="mb-2 block">
                   <Label htmlFor="title" value="Title" />
                 </div>
                 <TextInput
-                  id="title"
-                  name="title"
                   type="text"
+                  name="title"
+                  id="title"
+                  icon={MdTitle}
                   placeholder="Enter your event title"
                   required={true}
                 />
@@ -75,13 +87,15 @@ const CreateEvent = () => {
                 </div>
                 <FileInput
                   accept="image/*"
+                  name="image"
                   id="file"
                   helperText="Event photos are useful in giving a first impression of the event being held"
+                  required={true}
                   onChange={onImageChange}
                 />
                 <div className="mt-3">
                   <img
-                    className="max-h-72 w-100 object-fit rounded"
+                    className="object-fit rounded w-full aspect-video"
                     src={
                       !selectedImage
                         ? "https://via.placeholder.com/670x400"
@@ -102,16 +116,15 @@ const CreateEvent = () => {
                   initialValue="<p>This is the initial content of the editor.</p>"
                   init={{
                     menubar: "file edit", // available: file edit view format
-                    plugins: [
-                      "advlist autolink lists link image charmap print preview anchor",
-                      "searchreplace visualblocks code fullscreen",
-                      "insertdatetime media table paste code",
-                    ],
+                    mobile: {
+                      menubar: "file edit",
+                    },
                     toolbar:
                       "undo redo | formatselect bullist numlist | bold italic underline strikethrough language | removeformat",
                     branding: false,
                   }}
                   id="description"
+                  required={true}
                 />
               </div>
 
@@ -120,16 +133,22 @@ const CreateEvent = () => {
                   <Label htmlFor="eventType" value="Event type" />
                 </div>
 
-                <select
+                <Select
                   id="isOnline"
                   name="isOnline"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={({ target }) => setIsOnline(target.value)}
+                  icon={
+                    isOnline === "true"
+                      ? HiStatusOnline
+                      : HiOutlineStatusOffline
+                  }
+                  required={true}
                 >
                   <option value="">Choose a type</option>
                   <option value={true}>Online</option>
                   <option value={false}>Offline</option>
-                </select>
+                </Select>
               </div>
               {isOnline === "false" && (
                 <div className="mb-6">
@@ -141,25 +160,29 @@ const CreateEvent = () => {
                     id="location"
                     name="location"
                     placeholder="Enter event location"
+                    icon={HiLocationMarker}
+                    required={true}
                   />
                 </div>
               )}
 
               <div className="mb-6">
                 <div className="mb-2 block">
-                  <Label htmlFor="eventPrice" value="Event price" />
+                  <Label htmlFor="isPaid" value="Event price" />
                 </div>
 
-                <select
-                  id="eventPrice"
-                  name="eventPrice"
+                <Select
+                  id="isPaid"
+                  name="isPaid"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={({ target }) => setIsPaid(target.value)}
+                  icon={isPaid === "true" ? FaMoneyBill : MdMoneyOff}
+                  required={true}
                 >
                   <option value="">Choose a type</option>
                   <option value={true}>Paid</option>
                   <option value={false}>Free</option>
-                </select>
+                </Select>
               </div>
               {isPaid === "true" && (
                 <>
@@ -172,6 +195,12 @@ const CreateEvent = () => {
                       id="nominalPrice"
                       name="nominalPrice"
                       type="number"
+                      min={0}
+                      placeholder="Enter the nominal in IDR format"
+                      icon={FaMoneyBillAlt}
+                      value={nominalPrice}
+                      onChange={({ target }) => setNominalPrice(target.value)}
+                      required={true}
                     />
                   </div>
 
@@ -180,22 +209,25 @@ const CreateEvent = () => {
                       <Label htmlFor="priceType" value="Price type" />
                     </div>
 
-                    <select
+                    <Select
                       id="priceType"
                       name="priceType"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      icon={priceType === "person" ? MdPerson : MdGroup}
+                      onChange={({ target }) => setPriceType(target.value)}
+                      required={true}
                     >
                       <option value="">Choose a price type</option>
                       <option value="person">Person</option>
                       <option value="team">Team</option>
-                    </select>
+                    </Select>
                   </div>
                 </>
               )}
             </div>
 
-            <div className="h-fit hidden md:block">
-              <div className="p-6 md:p-8 xl:p-10">
+            <div className="h-fit">
+              <div className="px-6 pb-6 pt-0 md:p-8 xl:p-10">
                 <div className="mb-6">
                   <div className="mb-2 block">
                     <Label htmlFor="dateTimeStart" value="Event start" />
@@ -206,6 +238,8 @@ const CreateEvent = () => {
                     id="dateTimeStart"
                     name="dateTimeStart"
                     onChange={({ target }) => setDateTimeStart(target.value)}
+                    icon={BiCalendar}
+                    required={true}
                   />
                 </div>
 
@@ -219,6 +253,8 @@ const CreateEvent = () => {
                     id="dateTimeEnd"
                     name="dateTimeEnd"
                     onChange={({ target }) => setDateTimeEnd(target.value)}
+                    icon={BiCalendarCheck}
+                    required={true}
                   />
                 </div>
 
@@ -229,10 +265,12 @@ const CreateEvent = () => {
                     <ToggleSwitch
                       checked={isDraft}
                       onChange={() => setIsDraft(!isDraft)}
+                      id="isDraft"
+                      required={true}
                     />
-                    <span>
+                    <label htmlFor="isDraft">
                       {isDraft ? "Save as Draft" : "Request Publication"}
-                    </span>
+                    </label>
                   </div>
                 </div>
 
