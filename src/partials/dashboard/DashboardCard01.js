@@ -1,5 +1,4 @@
 import React from 'react';
-import Icon from '../../images/icon-01.svg';
 
 function DashboardCard01() {
   return (
