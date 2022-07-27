@@ -17,7 +17,8 @@ import { FaIdCard } from "react-icons/fa";
 const Settings = () => {
   const [modal, setModal] = useState(false);
   const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("dadang_steven");
+  const [username, setUsername] = useState("");
+  const [selectedProfileImage, setSelectedProfileImage] = useState();
   const {
     register,
     handleSubmit,
@@ -27,6 +28,7 @@ const Settings = () => {
   const {
     register: register2,
     handleSubmit: handleSubmit2,
+    reset: reset2,
     formState: { errors: errors2 },
   } = useForm();
 
@@ -44,12 +46,24 @@ const Settings = () => {
 
   const onClose = () => {
     setModal(false);
+
+    reset2({
+      pictures: null,
+    });
+    setSelectedProfileImage(null);
+  };
+
+  const onProfileImageChange = ({ target }) => {
+    const files = target.files;
+    if (files && files.length > 0) {
+      setSelectedProfileImage(files[0]);
+    }
   };
 
   useEffect(() => {
     setEmail("jese@gmail.com");
     setUsername("jese_leos");
-  });
+  }, []);
 
   return (
     <>
@@ -213,13 +227,27 @@ const Settings = () => {
                     accept="image/*"
                     id="file"
                     helperText="Upload photo file to change your profile pictures"
-                    {...register2("pictures", { required: true })}
+                    {...register2("pictures", {
+                      required: true,
+                      onChange: onProfileImageChange,
+                    })}
                   />
                   {errors2.pictures && (
                     <p className="text-xs mt-1 text-red-800 font-bold">
                       * This field is required
                     </p>
                   )}
+                </div>
+                <div className="mb-6">
+                  <img
+                    className="object-fit rounded w-full aspect-square"
+                    src={
+                      !selectedProfileImage
+                        ? "https://via.placeholder.com/400x400"
+                        : URL.createObjectURL(selectedProfileImage)
+                    }
+                    alt=""
+                  />
                 </div>
                 <Button type="submit">Change Profile Picture</Button>
               </form>
