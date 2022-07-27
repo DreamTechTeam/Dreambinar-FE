@@ -1,7 +1,8 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import About from "./pages/About";
+import Dashboard from "./pages/Dashboard/Dashboard";
 import Events from "./pages/Events";
 import EventsDetail from "./pages/EventsDetail";
 import Home from "./pages/Home";
@@ -9,6 +10,9 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
 import User from "./pages/User";
+import UserEvents from "./pages/Dashboard/UserEvents";
+import CreateEvent from "./pages/Dashboard/CreateEvent";
+import Settings from "./pages/Dashboard/Settings";
 
 const Router = () => {
   return (
@@ -22,6 +26,12 @@ const Router = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/user/:id" element={<User />} />
+
+        <Route path="/dashboard" element={<Dashboard />}/>
+        <Route path="/dashboard/events" element={<UserEvents />}/>
+        <Route path="/dashboard/events/add" element={<CreateEvent />}/>
+        <Route path="/dashboard/settings" element={<Settings />}/>
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </ScrollToTop>

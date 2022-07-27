@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   abbreviateNumber,
-  INDONESIAN_SYMBOL,
+  INDONESIAN_SYMBOL
 } from "../../utils/abbreviateNumber";
 import dateFormatted from "../../utils/dateFormatted";
 import isExpired from "../../utils/isExpired";
@@ -89,8 +89,8 @@ const EventItem = ({
                 <p className="text-md font-medium mb-2 block lg:hidden xl:block">
                   {dateFormatted(dateStart) === dateFormatted(dateEnd)
                     ? dateFormatted(dateStart)
-                    : dateEvent.length > 30
-                    ? `${dateEvent.slice(0, 30)}...`
+                    : dateEvent.length > 27
+                    ? `${dateEvent.slice(0, 27)}...`
                     : dateEvent}
                 </p>
                 <p className="text-md font-medium mb-2 hidden lg:block xl:hidden">

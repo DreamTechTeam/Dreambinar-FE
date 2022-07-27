@@ -40,7 +40,7 @@ const NavBar = () => {
           <img
             src="https://res.cloudinary.com/dreamtechteam/image/upload/v1657935772/dreambinar-logo_xrye3d.png"
             className="mr-3 h-6 sm:h-9 rounded-md"
-            alt="Flowbite Logo"
+            alt="Dreambinar Logo"
           />
           <span className="self-center text-gray-800 text-xl font-black font-sans whitespace-nowrap dark:text-white">
             Dream

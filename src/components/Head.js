@@ -1,11 +1,11 @@
 import React from "react";
 import { Helmet } from "react-helmet-async";
 
-const Head = (props) => {
+const Head = ({title, children}) => {
   return (
     <Helmet>
-      <title>{props.title} | Dreambinar</title>
-      {props.children && props.children}
+      <title>{title} | Dreambinar</title>
+      {children && children}
     </Helmet>
   );
 };
