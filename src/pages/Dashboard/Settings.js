@@ -178,7 +178,7 @@ const Settings = () => {
             </form>
           </div>
 
-          <div className="h-fit hidden md:block">
+          <div className="h-fit hidden md:block sticky top-14">
             <div className="p-6 md:p-8 xl:p-10 md:border-b flex items-center justify-between md:block xl:flex">
               <Avatar
                 img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
