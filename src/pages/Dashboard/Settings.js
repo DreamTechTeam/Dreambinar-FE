@@ -18,7 +18,7 @@ const Settings = () => {
   const [modal, setModal] = useState(false);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
-  const [selectedProfileImage, setSelectedProfileImage] = useState();
+  const [selectedProfileImage, setSelectedProfileImage] = useState(null);
   const {
     register,
     handleSubmit,
@@ -238,17 +238,16 @@ const Settings = () => {
                     </p>
                   )}
                 </div>
-                <div className="mb-6">
-                  <img
-                    className="object-fit rounded w-full aspect-square"
-                    src={
+                <div
+                  className={`mb-6 w-full h-72 bg-cover bg-center rounded-lg`}
+                  style={{
+                    backgroundImage: `url(${
                       !selectedProfileImage
                         ? "https://via.placeholder.com/400x400"
                         : URL.createObjectURL(selectedProfileImage)
-                    }
-                    alt=""
-                  />
-                </div>
+                    })`,
+                  }}
+                ></div>
                 <Button type="submit">Change Profile Picture</Button>
               </form>
             </div>
